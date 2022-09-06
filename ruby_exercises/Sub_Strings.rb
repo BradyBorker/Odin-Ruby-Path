@@ -9,7 +9,7 @@ def substrings(sentence, dictionary)
       end
     end
   end
-  puts match_count
+  return match_count
 end
 
- substrings("Howdy partner, sit down! How's it going?", dictionary)
+puts substrings("Howdy partner, sit down! How's it going?", dictionary)
