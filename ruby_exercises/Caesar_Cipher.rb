@@ -1,6 +1,5 @@
 alphabet = Array.new
-('a'..'z').each {|char| alphabet.push(char)}
-alphabet = alphabet.reverse
+('a'..'z').each {|char| alphabet.unshift(char)}
 
 def cipher(alphabet, string, shift=0)
   new_indexes = []
@@ -11,7 +10,6 @@ def cipher(alphabet, string, shift=0)
   new_indexes.each {|index| !(index.is_a? Numeric) ? new_string.push(index) : new_string.push(alphabet[index])}
   
   return new_string.join.capitalize
-  
 end
 
 puts cipher(alphabet, "What a string!", 5)
