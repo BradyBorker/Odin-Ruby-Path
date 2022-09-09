@@ -15,7 +15,7 @@ def bubble_sort(array)
     if (second_pointer == array.length-1 && has_switched) then
       first_pointer = 0
       has_switched = false
-    elsif (second_pointer == array.length-1 && has_switched == false)
+    elsif (second_pointer == array.length-1 && !has_switched)
       break
     end
   end
