@@ -4,6 +4,15 @@ class Board
   attr_accessor :board
   def initialize()
     @board = ['1','2','3','4','5','6','7','8','9']
+    @@spaces_left = 9
+  end
+
+  def self.remove_space()
+    @@spaces_left -= 1
+  end
+
+  def self.spaces_left()
+    @@spaces_left
   end
 end
 
@@ -45,6 +54,7 @@ def make_move(board, player)
   puts "Choose a location between 1 and 9"
   location = gets.chomp().to_i - 1
   board.board[location] = player.sign
+  Board.remove_space
 end
 
 def check_win(board, player, win_states)
@@ -107,6 +117,10 @@ def play_game(board, player1, player2)
       if (play_turn(player2, board, win_states))
         break
       end
+    end
+    if Board.spaces_left == 0
+      puts "It's a TIE!"
+      break
     end
   end
 end
