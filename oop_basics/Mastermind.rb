@@ -1,7 +1,34 @@
 # Mastermind
 module Feedback
-  def give_feedback(code, guess)
+  def find_red_pins(code_copy, feedback, guess)
+    for index in 0...code_copy.length
+      if code_copy[index] == guess[index]
+        feedback[:Red] += 1
+        code_copy[index] = '*'
+      end
+    end
+    return feedback
+  end
 
+  def find_white_pins(code_copy, feedback, guess)
+    for guess_index in 0...guess.length
+      for code_index in 0...code_copy.length
+        if guess[guess_index] == code_copy[code_index]
+          feedback[:White] += 1
+          code_copy[code_index] = '*'
+        end
+      end
+    end
+    return feedback
+  end
+
+  def give_feedback(code, guess)
+    code_copy = []
+    code.each {|color| code_copy.push(color)}
+    feedback = {Red: 0, White: 0}
+    find_red_pins(code_copy, feedback, guess)
+    find_white_pins(code_copy, feedback, guess)    
+    return feedback
   end
 end
 
@@ -14,7 +41,7 @@ class CodeMaker
   def give_feedback(guess)
     super(self.code, guess)
   end
-  #Give Feedback to CodeBreaker
+
   protected
   attr_reader :code
 end
@@ -36,7 +63,8 @@ end
 def computer_create_code(color_pool)
   colors = []
   4.times {colors.push(color_pool.sample)}
-  return CodeMaker.new(colors)
+  # MANUALLY CREATING CODE REVERT AFTER TESTING
+  return CodeMaker.new(['red','green','blue','yellow'])
 end
 
 def human_make_guess(color_pool)
@@ -67,6 +95,8 @@ end
 def play_game()
   color_pool = ['red','green','blue','yellow','orange','purple']
   # If COMPUTER is code maker
+  # CODE CREATION
+  # MANUALLY CREATING CODE REVERT AFTER TESTING
   code_maker = computer_create_code(color_pool)
   # Make human Code Breaker
   code_breaker = CodeBreaker.new()
@@ -75,7 +105,8 @@ def play_game()
   while true 
     code_breaker.make_guess(human_make_guess(color_pool))
     # Compare guess with code/ Give feedback/ Check Win (4 reds == win)
-
+    feedback = code_maker.give_feedback(code_breaker.current_guess)
+    p feedback
 
 
     
