@@ -32,8 +32,6 @@ module Feedback
   end
 
   def trim_all_possible_combinations(all_possible_combinations, current_guess, current_feedback)
-    #copy_all_possible_combinations = []
-    #all_possible_combinations.each {|combination| copy_all_possible_combinations.push(combination)}
     trimmed_possible_combinations = []
     for code_combination in all_possible_combinations
       if code_combination == current_guess
@@ -96,7 +94,7 @@ def game_intro()
     elsif answer == 'breaker'
       return 'breaker'
     else
-      puts "Please enter either 'creator' or 'breaker'"
+      puts "Please enter either 'maker' or 'breaker'"
     end
   end
 end
@@ -117,14 +115,6 @@ def computer_create_code(color_pool)
   colors = []
   4.times {colors.push(color_pool.sample)}
   return CodeMaker.new(colors)
-end
-
-def computer_make_guess(all_possible_combinations, current_guess, feedback, code_maker)
-  # Compare current guess with all possible combinations
-  # Treat each individual code in all_possible_combinations as potential code
-  # Treat current_guess as guess against those codes
-  # If feedback matches, that individual code is a potential answer, if doesn't match disregard
-  #all_possible_combinations = code_maker.trim_all_possible_combinations(all_possible_combinations, current_guess, feedback)
 end
 
 def human_create_code(color_pool)
@@ -169,6 +159,16 @@ def output_feedback(feedback)
   puts "-------"
 end
 
+def check_win(feedback, code_breaker)
+  if feedback[:Red] == 4
+    puts "YOU WIN!"
+    return true
+  elsif code_breaker.guess_history.length == 12
+    puts "YOU LOSE!"
+    return true
+  end
+end
+
 def play_game()
   color_pool = ['red','green','blue','yellow','orange','purple']
   player_selection = game_intro()
@@ -179,15 +179,10 @@ def play_game()
     code_breaker = CodeBreaker.new()
     while true 
       code_breaker.make_guess(human_make_guess(color_pool))
-      # Compare guess with code/ Give feedback/ Check Win (4 reds == win)
       feedback = code_maker.give_feedback(code_breaker.current_guess)
       output_feedback(feedback)
       # Win Condition
-      if feedback[:Red] == 4
-        puts "YOU WIN!"
-        return
-      elsif code_breaker.guess_history.length == 12
-        puts "YOU LOSE!"
+      if check_win(feedback, code_breaker) == true
         return
       end
     end
@@ -202,28 +197,16 @@ def play_game()
       if code_breaker.turn_number == 1
         code_breaker.make_guess(['red','red','green','green'])
         feedback = code_maker.give_feedback(code_breaker.current_guess)
-      else
-        # Trim combinations using previous feedback
-        # Make guess using new list created
-        # Get feedback
-        all_possible_combinations = code_maker.trim_all_possible_combinations(all_possible_combinations, code_breaker.current_guess, feedback)
-        p all_possible_combinations.length
-        p feedback
         puts "COMPUTER GUESS: "
-        p all_possible_combinations[0]
+        p code_breaker.current_guess
+      else
+        all_possible_combinations = code_maker.trim_all_possible_combinations(all_possible_combinations, code_breaker.current_guess, feedback)
         code_breaker.make_guess(all_possible_combinations[0])
-
-        #code_breaker.make_guess(computer_make_guess(all_possible_combinations, code_breaker.current_guess, feedback, code_maker))
         feedback = code_maker.give_feedback(code_breaker.current_guess)
+        puts "COMPUTER GUESS: "
+        p code_breaker.current_guess
       end
-      
-      #puts "COMPUTER GUESS!"
-      #p code_breaker.current_guess
-      if feedback[:Red] == 4
-        puts "YOU WIN!"
-        return
-      elsif code_breaker.guess_history.length == 12
-        puts "YOU LOSE!"
+      if check_win(feedback, code_breaker) == true
         return
       end
     end
