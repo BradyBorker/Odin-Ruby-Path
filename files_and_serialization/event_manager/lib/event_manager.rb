@@ -43,7 +43,7 @@ def get_registration_hours_sorted(registration_hour_tally)
   end
 end
 
-def tally_weekday(day, registration_weekday_tally)
+def tally_weekday(registration_weekday_tally,day)
   registration_weekday_tally[day] += 1
 end
 
@@ -106,7 +106,7 @@ contents.each do |row|
   
   tally_registration_hours(registration_hour_tally, date_time.hour)
 
-  tally_weekday(date_time.strftime("%A"), registration_weekday_tally)
+  tally_weekday(registration_weekday_tally, date_time.strftime("%A"))
   
   legislators = legislators_by_zipcode(zipcode)
 
