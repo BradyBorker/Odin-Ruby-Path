@@ -14,7 +14,7 @@ class Game
     self.new(word_list.sample)
   end
 
-  def check_char_against_word(character)
+  def check_guess_against_word(character)
     @current_guess = character
     @indexes = []
     self.chosen_word.split('').each_with_index {|value, index| @indexes.push(index) if value == @current_guess}
@@ -44,20 +44,9 @@ class Game
     end
   end
 
-  protected
+  private
   
   attr_reader :chosen_word
-end
-
-def make_guess()
-  while true
-    guess = gets.chomp
-    if guess.match?(/[[:alpha:]]/) && guess.length == 1
-      return guess.downcase
-    else
-      puts "Incorrect Input!"
-    end
-  end
 end
 
 def display_hangman(wrong_guesses)
@@ -83,25 +72,64 @@ def display_hangman(wrong_guesses)
   end
 end
 
+def display_menu()
+  puts "-" * 35
+  puts "            | RULES |"
+  puts "Enter a single character (a-z) as guess"
+  puts "Type 'exit' to exit game"
+  puts "Type 'save' to save game"
+  puts "-" * 35
+end
+
+def save_game(game_instance)
+  Dir.mkdir('saved_games') if !(Dir.exists?('saved_games'))
+  saved_game = Marshal.dump(game_instance)
+  filename = "saved_games/#{game_instance.hidden_word}-#{Time.now().strftime("%b-%w-%-I:%M%p")}"
+
+  File.open(filename, 'w') do |file|
+    file.puts saved_game
+  end
+  puts "Game Saved!"
+end
+
+def load_game()
+
+end
+
+def player_input(game_instance)
+  while true
+    input = gets.chomp.downcase
+    if input.match?(/[[:alpha:]]/) && input.length == 1
+      return input.downcase
+    elsif input == 'exit'
+      puts "Ending Game!"
+      return
+    elsif input == 'save'
+      save_game(game_instance)
+    else
+      puts "Incorrect Input!"
+    end
+  end
+end
+
 def main(word_list)
+  puts "New Game or Load Game?"
   # If new game
   game_instance = Game.pick_word(word_list)
-  #game_instance = Game.pick_word('app')
   # TODO: Create game from load file
-  puts "Make a guess... Can only pick one character!"
+  display_menu()
+  
   puts "    #{game_instance.hidden_word}"
   
   while true
   
-    guess = make_guess()
-    game_instance.check_char_against_word(guess)
+    input = player_input(game_instance)
+    return if input.nil?
+
+    game_instance.check_guess_against_word(input)
     game_instance.update_hidden_word()
 
     puts "#{display_hangman(game_instance.wrong_guesses)}    #{game_instance.hidden_word}"
-
-    #puts game_instance.hidden_word
-
-    #display_hangman(game_instance.wrong_guesses)
 
     return if game_instance.check_win() || game_instance.check_lose()
     
