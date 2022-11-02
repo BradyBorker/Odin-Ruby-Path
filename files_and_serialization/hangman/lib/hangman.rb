@@ -81,21 +81,6 @@ def display_menu()
   puts "-" * 35
 end
 
-def save_game(game_instance)
-  Dir.mkdir('saved_games') if !(Dir.exists?('saved_games'))
-  saved_game = Marshal.dump(game_instance)
-  filename = "saved_games/#{game_instance.hidden_word}-#{Time.now().strftime("%b-%w-%-I:%M%p")}"
-
-  File.open(filename, 'w') do |file|
-    file.puts saved_game
-  end
-  puts "Game Saved!"
-end
-
-def load_game()
-
-end
-
 def player_input(game_instance)
   while true
     input = gets.chomp.downcase
@@ -112,17 +97,76 @@ def player_input(game_instance)
   end
 end
 
-def main(word_list)
+def save_game(game_instance)
+  Dir.mkdir('saved_games') if !(Dir.exists?('saved_games'))
+  saved_game = Marshal.dump(game_instance)
+  filename = "saved_games/#{game_instance.hidden_word}-#{Time.now().strftime("%b-%w-%-I:%M%p")}"
+
+  File.open(filename, 'w') do |file|
+    file.puts saved_game
+  end
+  puts "Game Saved!"
+end
+
+def load_game(word_list)
+  counter = 1
+  game_files = {}
+  Dir.each_child("saved_games") do |game|
+    game_files[counter] = game 
+    counter += 1
+  end
+
+  puts "Pick a game to load (Enter a number)"
+  puts "-" * 20
+  game_files.each_pair do |number, game|
+    puts "#{number}    #{game}"
+  end
+  puts "-" * 20
+
+  while true
+    input = gets.chomp.to_i
+    if game_files.keys.include?(input)
+      # LOAD GAME FILE HERE
+      return
+    else
+      puts "Try another number"
+    end
+  end
+
+  # TEMP RETURN STATEMENT
+  return Game.pick_word(word_list)
+end
+
+def start_game(word_list)
+  if !(Dir.exists?("saved_games")) || Dir.empty?("saved_games")
+    puts "Starting new game!"
+    return Game.pick_word(word_list)
+  end
+
   puts "New Game or Load Game?"
+  puts "type 'new' for new game and 'load' for saved game"
+  while true
+    input = gets.chomp.downcase
+    if input == 'new'
+      return Game.pick_word(word_list)
+    elsif input == 'load'
+      return load_game(word_list)
+    else
+      puts "Wrong Input"
+    end
+  end
+end
+
+def main(word_list)
   # If new game
-  game_instance = Game.pick_word(word_list)
-  # TODO: Create game from load file
+  #game_instance = Game.pick_word(word_list)
+  game_instance = start_game(word_list)
+
   display_menu()
   
   puts "    #{game_instance.hidden_word}"
   
   while true
-  
     input = player_input(game_instance)
     return if input.nil?
 
@@ -132,10 +176,6 @@ def main(word_list)
     puts "#{display_hangman(game_instance.wrong_guesses)}    #{game_instance.hidden_word}"
 
     return if game_instance.check_win() || game_instance.check_lose()
-    
-    #TODO: Check if game won or lost
-
-    
   end
 end
 
