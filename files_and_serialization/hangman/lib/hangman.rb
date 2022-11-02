@@ -65,7 +65,7 @@ def display_hangman(wrong_guesses)
     puts " O"
   elsif wrong_guesses == 2
     puts " O"
-    print "|"
+    print " |"
   elsif wrong_guesses == 3
     puts " O"
     print "/|"
@@ -79,7 +79,7 @@ def display_hangman(wrong_guesses)
   elsif wrong_guesses == 6
     puts " O"
     puts "/|\\"
-    puts "/\\"
+    puts "/`\\"
   end
 end
 
@@ -89,7 +89,7 @@ def main(word_list)
   #game_instance = Game.pick_word('app')
   # TODO: Create game from load file
   puts "Make a guess... Can only pick one character!"
-  puts game_instance.hidden_word
+  puts "    #{game_instance.hidden_word}"
   
   while true
   
