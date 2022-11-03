@@ -1,9 +1,13 @@
+require 'colorize'
+
 def display_hangman(wrong_guesses)
   if wrong_guesses == 1
     puts " O"
+    puts ""
   elsif wrong_guesses == 2
     puts " O"
     print " |"
+    puts ""
   elsif wrong_guesses == 3
     puts " O"
     print "/|"
@@ -37,4 +41,16 @@ def display_load_game_menu(game_files)
     puts "#{number}    #{game}"
   end
   puts "-" * 20
+end
+
+def display_guess_history(guess_history)
+  guesses = ""
+  for character in guess_history.keys
+    if guess_history[character] == 'red'
+      guesses += "#{character.red} "
+    elsif guess_history[character] == 'green'
+      guesses += "#{character.green} "
+    end
+  end
+  puts "[ #{guesses}]"
 end

@@ -2,13 +2,14 @@ require_relative "display.rb"
 
 class Game
   attr_accessor :hidden_word
-  attr_reader :wrong_guesses
+  attr_reader :wrong_guesses, :guess_history
 
   def initialize(word)
     @chosen_word = word
     @hidden_word = '_' * word.length
     @current_guess = ''
     @wrong_guesses = 0
+    @guess_history = {}
   end
 
   def self.pick_word(word_list)
@@ -23,6 +24,9 @@ class Game
     
     if @indexes.empty?
       @wrong_guesses += 1
+      self.guess_history[@current_guess] = 'red'
+    elsif
+      self.guess_history[@current_guess] = 'green'
     end
   end
 
@@ -139,6 +143,9 @@ def main(word_list)
 
     puts "#{display_hangman(game_instance.wrong_guesses)}"
     puts "#{game_instance.hidden_word}"
+    puts ""
+    display_guess_history(game_instance.guess_history)
+    #game_instance.guess_history
 
     return if game_instance.check_win() || game_instance.check_lose()
   end
