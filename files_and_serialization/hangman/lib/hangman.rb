@@ -126,15 +126,15 @@ def load_game(word_list)
   while true
     input = gets.chomp.to_i
     if game_files.keys.include?(input)
-      # LOAD GAME FILE HERE
-      return
+      File.open("saved_games/#{game_files[input]}") do |file|
+        loaded_instance = Marshal.load(file.read)
+        file.close
+        return loaded_instance
+      end
     else
-      puts "Try another number"
+      puts "Not an option, try again"
     end
   end
-
-  # TEMP RETURN STATEMENT
-  return Game.pick_word(word_list)
 end
 
 def start_game(word_list)
@@ -163,7 +163,8 @@ def main(word_list)
   game_instance = start_game(word_list)
 
   display_menu()
-  
+  display_hangman(game_instance.wrong_guesses)
+
   puts "    #{game_instance.hidden_word}"
   
   while true
