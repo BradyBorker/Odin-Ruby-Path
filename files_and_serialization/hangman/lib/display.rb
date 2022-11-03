@@ -54,3 +54,11 @@ def display_guess_history(guess_history)
   end
   puts "[ #{guesses}]"
 end
+
+def display_game(game_instance)
+  display_hangman(game_instance.wrong_guesses)
+  puts ""
+  puts "#{game_instance.hidden_word}"
+  puts ""
+  display_guess_history(game_instance.guess_history)
+end

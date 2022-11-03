@@ -76,12 +76,8 @@ def main(word_list)
   game_instance = start_game(word_list)
 
   display_menu()
-  display_hangman(game_instance.wrong_guesses)
-  puts ""
-  puts "#{game_instance.hidden_word}"
-  puts ""
-  display_guess_history(game_instance.guess_history)
 
+  display_game(game_instance)
   
   while true
     input = player_input(game_instance)
@@ -90,11 +86,7 @@ def main(word_list)
     game_instance.check_guess_against_word(input)
     game_instance.update_hidden_word()
 
-    puts "#{display_hangman(game_instance.wrong_guesses)}"
-    puts ""
-    puts "#{game_instance.hidden_word}"
-    puts ""
-    display_guess_history(game_instance.guess_history)
+    display_game(game_instance)
 
     return if game_instance.check_win() || game_instance.check_lose()
   end
