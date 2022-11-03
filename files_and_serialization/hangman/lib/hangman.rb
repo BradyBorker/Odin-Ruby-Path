@@ -1,3 +1,5 @@
+require_relative "display.rb"
+
 class Game
   attr_accessor :hidden_word
   attr_reader :wrong_guesses
@@ -49,38 +51,6 @@ class Game
   attr_reader :chosen_word
 end
 
-def display_hangman(wrong_guesses)
-  if wrong_guesses == 1
-    puts " O"
-  elsif wrong_guesses == 2
-    puts " O"
-    print " |"
-  elsif wrong_guesses == 3
-    puts " O"
-    print "/|"
-  elsif wrong_guesses == 4
-    puts " O"
-    puts "/|\\"
-  elsif wrong_guesses == 5
-    puts " O"
-    puts "/|\\"
-    puts "/"
-  elsif wrong_guesses == 6
-    puts " O"
-    puts "/|\\"
-    puts "/`\\"
-  end
-end
-
-def display_menu()
-  puts "-" * 35
-  puts "            | RULES |"
-  puts "Enter a single character (a-z) as guess"
-  puts "Type 'exit' to exit game"
-  puts "Type 'save' to save game"
-  puts "-" * 35
-end
-
 def player_input(game_instance)
   while true
     input = gets.chomp.downcase
@@ -116,12 +86,7 @@ def load_game(word_list)
     counter += 1
   end
 
-  puts "Pick a game to load (Enter a number)"
-  puts "-" * 20
-  game_files.each_pair do |number, game|
-    puts "#{number}    #{game}"
-  end
-  puts "-" * 20
+  display_load_game_menu(game_files)
 
   while true
     input = gets.chomp.to_i
@@ -158,8 +123,6 @@ def start_game(word_list)
 end
 
 def main(word_list)
-  # If new game
-  #game_instance = Game.pick_word(word_list)
   game_instance = start_game(word_list)
 
   display_menu()
