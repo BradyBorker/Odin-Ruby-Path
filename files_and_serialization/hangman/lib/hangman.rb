@@ -145,8 +145,7 @@ def main(word_list)
     puts "#{game_instance.hidden_word}"
     puts ""
     display_guess_history(game_instance.guess_history)
-    #game_instance.guess_history
-
+    
     return if game_instance.check_win() || game_instance.check_lose()
   end
 end
