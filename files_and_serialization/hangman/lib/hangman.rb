@@ -51,22 +51,6 @@ class Game
   attr_reader :chosen_word
 end
 
-def player_input(game_instance)
-  while true
-    input = gets.chomp.downcase
-    if input.match?(/[[:alpha:]]/) && input.length == 1
-      return input.downcase
-    elsif input == 'exit'
-      puts "Ending Game!"
-      return
-    elsif input == 'save'
-      save_game(game_instance)
-    else
-      puts "Incorrect Input!"
-    end
-  end
-end
-
 def save_game(game_instance)
   Dir.mkdir('saved_games') if !(Dir.exists?('saved_games'))
   saved_game = Marshal.dump(game_instance)
@@ -102,6 +86,22 @@ def load_game(word_list)
   end
 end
 
+def player_input(game_instance)
+  while true
+    input = gets.chomp.downcase
+    if input.match?(/[[:alpha:]]/) && input.length == 1
+      return input.downcase
+    elsif input == 'exit'
+      puts "Ending Game!"
+      return
+    elsif input == 'save'
+      save_game(game_instance)
+    else
+      puts "Incorrect Input!"
+    end
+  end
+end
+
 def start_game(word_list)
   if !(Dir.exists?("saved_games")) || Dir.empty?("saved_games")
     puts "Starting new game!"
@@ -128,7 +128,7 @@ def main(word_list)
   display_menu()
   display_hangman(game_instance.wrong_guesses)
 
-  puts "    #{game_instance.hidden_word}"
+  puts "#{game_instance.hidden_word}"
   
   while true
     input = player_input(game_instance)
@@ -137,7 +137,8 @@ def main(word_list)
     game_instance.check_guess_against_word(input)
     game_instance.update_hidden_word()
 
-    puts "#{display_hangman(game_instance.wrong_guesses)}    #{game_instance.hidden_word}"
+    puts "#{display_hangman(game_instance.wrong_guesses)}"
+    puts "#{game_instance.hidden_word}"
 
     return if game_instance.check_win() || game_instance.check_lose()
   end
