@@ -17,8 +17,6 @@ p fibs(8) # => [0,1,1,2,3,5,8,13]
 def fibs_rec(n, sequence=[0,1])
   if sequence.length == n
     return sequence
-  elsif n <= 2
-    return 1
   end
   sequence.append(sequence[-1] + sequence[-2])
   fibs_rec(n, sequence)
