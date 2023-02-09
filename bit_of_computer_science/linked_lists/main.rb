@@ -19,3 +19,7 @@ p list.contains?(5)
 p list.contains?(200)
 p list.find(4)
 p list.to_s
+list.insert_at(100, 1)
+p list.to_s
+list.remove_at(1)
+p list.to_s

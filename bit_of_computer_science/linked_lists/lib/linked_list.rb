@@ -96,4 +96,37 @@ class LinkedList
     end
     string += "( #{current.value} ) -> nil"
   end
+
+  def insert_at(value, index)
+    current = self.head_node
+    previous = nil
+    current_index = 0
+
+    if index == 0
+      addFirst(value, self.head_node)
+      return
+    end
+    
+    while current.next_node != nil && current_index != index
+      previous = current
+      current = current.next_node
+      current_index += 1
+    end
+
+    previous.next_node = Node.new(value, current)
+  end
+
+  def remove_at(index)
+    current = self.head_node
+    previous = nil
+    current_index = 0
+
+    while current.next_node != nil && current_index != index
+      previous = current
+      current = current.next_node
+      current_index += 1
+    end
+
+    previous.next_node = current.next_node
+  end
 end
