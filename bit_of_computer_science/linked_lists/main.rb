@@ -8,18 +8,26 @@ list.append(3)
 list.prepend(10)
 list.prepend(12)
 
-p list
+p list.to_s
+
 p list.size
+
 p list.head
+
 p list.tail
-p list.at(3) 
+
+p list.at(1)
+
 p list.pop
-p list
-p list.contains?(5)
-p list.contains?(200)
+p list.to_s
+
+p list.contains?(4)
+p list.contains?(100)
+
 p list.find(4)
+
+list.insert_at(25, 1)
 p list.to_s
-list.insert_at(100, 1)
-p list.to_s
+
 list.remove_at(1)
 p list.to_s
