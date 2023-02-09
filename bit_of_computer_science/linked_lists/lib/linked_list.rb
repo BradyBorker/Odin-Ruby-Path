@@ -28,7 +28,7 @@ class LinkedList
   def size()
     current = self.head_node
     node_counter = 0
-    while current.next_node != nil do
+    while current.next_node != nil 
       node_counter += 1
       current = current.next_node
     end
@@ -48,7 +48,7 @@ class LinkedList
   def at(requested_index)
     current = self.head_node
     current_index = 0
-    while current_index < requested_index do
+    while current_index < requested_index
       current = current.next_node
       current_index += 1
     end
@@ -56,6 +56,44 @@ class LinkedList
   end
 
   def pop()
+    current = self.head_node
+    while current.next_node != nil
+      previous = current
+      current = current.next_node
+    end
+    previous.next_node = nil
+    return current.value
+  end
 
+  def contains?(value)
+    current = self.head_node
+    while current.next_node != nil
+      return true if current.value == value
+      current = current.next_node
+    end
+    return true if current.value == value
+    return false
+  end
+
+  def find(value)
+    current = self.head_node
+    index = 0
+    while current.next_node != nil
+      return index if current.value == value
+      current = current.next_node
+      index += 1
+    end
+    return index if current.value == value
+    return nil
+  end
+
+  def to_s()
+    current = self.head_node
+    string = ""
+    while current.next_node != nil
+      string += "( #{current.value} ) -> "
+      current = current.next_node
+    end
+    string += "( #{current.value} ) -> nil"
   end
 end
