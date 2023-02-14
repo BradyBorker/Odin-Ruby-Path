@@ -28,7 +28,21 @@ class Tree
     return root_node
   end
 
-  def insert(value)
+  def insert(value, root=self.root)
+
+    if root == nil
+      return Node.new(value)
+    end
+
+    if value < root.data
+      root.left = insert(value, root.left)
+    elsif value > root.data
+      root.right = insert(value, root.right)
+    end
+
+    return root
+
+=begin
     current_node = self.root
 
     while current_node.left != nil || current_node.right != nil
@@ -52,6 +66,11 @@ class Tree
     else
       current_node.right = Node.new(value)
     end
+=end
+  end
+
+  def delete(value)
+
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -63,10 +82,11 @@ end
 
 tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
 
-tree.insert(30)
-tree.insert(37)
-tree.insert(2)
-tree.insert(40)
-tree.insert(17)
+tree.insert(6400)
+tree.insert(360)
+tree.insert(250)
+tree.insert(6500)
+tree.insert(6375)
+
 
 tree.pretty_print
