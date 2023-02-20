@@ -20,16 +20,13 @@ class Tree
     end
 
     root_node = Node.new(array[array.length / 2])
-
     root_node.left = build_tree(array[0...array.length / 2])
-
     root_node.right = build_tree(array[array.length / 2 + 1..])
 
     return root_node
   end
 
   def insert(value, root=self.root)
-
     if root == nil
       return Node.new(value)
     end
@@ -41,36 +38,60 @@ class Tree
     end
 
     return root
-
-=begin
-    current_node = self.root
-
-    while current_node.left != nil || current_node.right != nil
-      if value < current_node.data
-        if current_node.left.nil?
-          current_node.left = Node.new(value)
-          return
-        end
-        current_node = current_node.left
-      else
-        if current_node.right.nil?
-          current_node.right = Node.new(value)
-          return
-        end
-        current_node = current_node.right
-      end
-    end
-
-    if value < current_node.data 
-      current_node.left = Node.new(value)
-    else
-      current_node.right = Node.new(value)
-    end
-=end
   end
 
-  def delete(value)
+  def min_value_node(node)
+    current = node
 
+    while !current.left.nil?
+      current = current.left
+    end
+
+    return current
+  end
+
+  def delete(value, root=self.root)
+    if root.nil?
+      return root
+    end
+    if value < root.data
+      root.left = delete(value, root.left)
+    elsif value > root.data
+      root.right = delete(value, root.right)
+    else
+      if root.right.nil?
+        temp = root.left
+        root = nil
+        return temp
+      elsif root.left.nil?
+        temp = root.right
+        root = nil
+        return temp
+      end
+
+      temp = min_value_node(root.right)
+
+      root.data = temp.data
+
+      root.right = delete(temp.data, root.right)
+    end
+
+    return root
+  end
+
+  def find(value, root=self.root)
+    current = root
+
+    while !current.nil?
+      if value < current.data
+        current = current.left
+      elsif value > current.data
+        current = current.right
+      else
+        puts current
+        return
+      end
+    end
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -87,6 +108,10 @@ tree.insert(360)
 tree.insert(250)
 tree.insert(6500)
 tree.insert(6375)
+tree.delete(1)
+tree.delete(7)
+tree.delete(324)
+tree.find(9)
 
 
 tree.pretty_print
