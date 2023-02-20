@@ -111,6 +111,48 @@ class Tree
     p nodes if !block_given?
   end
 
+  def preorder(root=self.root, nodes=[])
+    return if root.nil?
+    
+    nodes.push(root)
+    preorder(root.left, nodes)
+    preorder(root.right, nodes)
+
+    if block_given?
+      nodes.each {|node| yield node}
+    else
+      return nodes.map {|node| node.data}
+    end 
+  end
+
+  def inorder(root=self.root, nodes=[])
+    return if root.nil?
+    
+    inorder(root.left, nodes)
+    nodes.push(root)
+    inorder(root.right, nodes)
+    
+    if block_given?
+      nodes.each {|node| yield node}
+    else
+      return nodes.map {|node| node.data}
+    end 
+  end 
+
+  def postorder(root=self.root, nodes=[])
+    return if root.nil?
+
+    postorder(root.left, nodes)
+    postorder(root.right, nodes)
+    nodes.push(root)
+
+    if block_given?
+      nodes.each {|node| yield node}
+    else
+      return nodes.map {|node| node.data}
+    end
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
@@ -128,7 +170,13 @@ tree.insert(6375)
 tree.delete(1)
 tree.delete(7)
 tree.delete(324)
-tree.find(9)
-tree.level_order
+#tree.find(9)
+#tree.level_order
+puts 'preorder'
+p tree.preorder 
+puts 'inorder'
+p tree.inorder
+puts 'postorder'
+tree.postorder {|node| puts node.data}
 
 tree.pretty_print
