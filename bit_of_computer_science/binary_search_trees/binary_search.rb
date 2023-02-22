@@ -8,10 +8,11 @@ class Node
 end
 
 class Tree
-  attr_accessor :root, :data
+  attr_accessor :root, :data, :node_height
   def initialize(array)
     @data = array.sort.uniq
     @root = build_tree(data)
+    @node_height = 0
   end
 
   def build_tree(array)
@@ -88,8 +89,7 @@ class Tree
       elsif value > current.data
         current = current.right
       else
-        puts current
-        return
+        return current
       end
     end
   end
@@ -108,7 +108,7 @@ class Tree
       block_given? ? (yield current) : nodes.push(current.data)
     end
     
-    p nodes if !block_given?
+    return nodes if !block_given?
   end
 
   def preorder(root=self.root, nodes=[])
@@ -120,6 +120,7 @@ class Tree
 
     if block_given?
       nodes.each {|node| yield node}
+      return
     else
       return nodes.map {|node| node.data}
     end 
@@ -134,6 +135,7 @@ class Tree
     
     if block_given?
       nodes.each {|node| yield node}
+      return
     else
       return nodes.map {|node| node.data}
     end 
@@ -148,9 +150,32 @@ class Tree
 
     if block_given?
       nodes.each {|node| yield node}
+      return
     else
       return nodes.map {|node| node.data}
     end
+  end
+
+  def tree_height(target=self.root.data, root=self.root)
+    if root.nil?
+      return -1
+    end
+
+    left_height = tree_height(target, root.left)
+    right_height = tree_height(target, root.right)
+
+    ans = [left_height, right_height].max + 1 
+
+    if root.data == target
+      self.node_height = ans
+    end
+
+    return ans
+  end
+
+  def height(target)
+    max_height = tree_height(target)
+    return self.node_height
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -172,11 +197,8 @@ tree.delete(7)
 tree.delete(324)
 #tree.find(9)
 #tree.level_order
-puts 'preorder'
-p tree.preorder 
-puts 'inorder'
-p tree.inorder
-puts 'postorder'
-tree.postorder {|node| puts node.data}
+#puts 'postorder'
+#p tree.postorder
+p tree.height(67)
 
 tree.pretty_print
