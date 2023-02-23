@@ -227,19 +227,35 @@ class Tree
   end
 end
 
-tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
+puts "CREATING TREE WITH 15 NUMS"
+tree = Tree.new(Array.new(15) { rand(1..100) })
 
-tree.insert(6400)
-tree.insert(360)
-tree.insert(250)
-tree.insert(6500)
-tree.insert(6375)
-tree.delete(1)
-tree.delete(7)
-tree.delete(324)
+puts "Balanced? #{tree.balanced?}"
 
-p tree.balanced?()
+puts "Level Order"
+p tree.level_order
+puts "Pre Order"
+p tree.preorder
+puts "InOrder"
+p tree.inorder
+puts "Post Order"
+p tree.postorder
+
+puts "ADDING 100 NUMBERS"
+Array.new(100) { rand(1..100) }.each {|num| tree.insert(num)}
+
+puts "Balanced? #{tree.balanced?}"
+
+puts "Rebalancing"
 tree.rebalance
-p tree.balanced?
+tree.balanced?
 
-tree.pretty_print
+puts "Level Order"
+p tree.level_order
+puts "Pre Order"
+p tree.preorder
+puts "InOrder"
+p tree.inorder
+puts "Post Order"
+p tree.postorder
+
