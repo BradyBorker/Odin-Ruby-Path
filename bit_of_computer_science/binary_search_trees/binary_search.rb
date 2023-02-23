@@ -164,13 +164,13 @@ class Tree
     left_height = tree_height(target, root.left)
     right_height = tree_height(target, root.right)
 
-    ans = [left_height, right_height].max + 1 
+    h = [left_height, right_height].max + 1 
 
     if root.data == target
-      self.node_height = ans
+      self.node_height = h
     end
 
-    return ans
+    return h
   end
 
   def height(target)
@@ -192,6 +192,34 @@ class Tree
     end
   end
 
+  def tree_balanced_util(root=self.root)
+    if root.nil?
+      return 0
+    end
+
+    left = tree_balanced_util(root.left)
+    return -1 if left == -1
+
+    right = tree_balanced_util(root.right)
+    return -1 if right == -1
+
+    return -1 if (left - right).abs > 1
+
+    return [left + right].max + 1
+  end
+
+  def balanced?()
+    if tree_balanced_util() == -1
+      return false
+    else
+      return true
+    end
+  end
+
+  def rebalance()
+    self.root = build_tree(inorder())
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
@@ -209,11 +237,9 @@ tree.insert(6375)
 tree.delete(1)
 tree.delete(7)
 tree.delete(324)
-#tree.find(9)
-#tree.level_order
-#puts 'postorder'
-#p tree.postorder
-#p tree.height(67)
-p tree.depth(5)
+
+p tree.balanced?()
+tree.rebalance
+p tree.balanced?
 
 tree.pretty_print
