@@ -6,7 +6,6 @@ class Knight
   def initialize(position, parent=nil)
     @position = position
     @parent = parent
-    @children = []
   end
 
   def self.transform
