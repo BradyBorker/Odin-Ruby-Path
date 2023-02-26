@@ -1,5 +1,5 @@
 class Knight
-  attr_accessor :position, :parent, :children
+  attr_accessor :position, :parent
 
   @@TRANSFORMATIONS = [[1,2], [2,1], [-1,2], [-2,1], [-2,-1], [-1,-2], [1,-2], [2,-1]].freeze
 
@@ -23,6 +23,19 @@ def is_valid(coordinate)
   end
 end
 
+def print_path(current)
+  path = []
+  until current.parent.nil?
+    path.unshift(current.position)
+    current = current.parent
+  end
+  path.unshift(current.position)
+  
+  puts (path.length - 1 > 1) ? "You made it in #{path.length - 1} moves! Here is your path" : "You made it in #{path.length - 1} move! Here is your path"
+  
+  path.each {|coord| p coord}
+end
+
 def knight_moves(start, dest)
   history = []
   coordinates_queue = [Knight.new(start)]
@@ -39,16 +52,7 @@ def knight_moves(start, dest)
     current = coordinates_queue.shift
   end
 
-  path = []
-  until current.parent.nil?
-    path.unshift(current.position)
-    current = current.parent
-  end
-  path.unshift(current.position)
-  
-  puts (path.length - 1 > 1) ? "You made it in #{path.length - 1} moves! Here is your path" : "You made it in #{path.length - 1} move! Here is your path"
-  
-  path.each {|coord| p coord}
+  print_path(current)
 end
 
 knight_moves([0,0], [1,2])
