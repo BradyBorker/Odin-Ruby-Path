@@ -1,13 +1,16 @@
-lst = [1,2,3,4]
-
-def add_two(lst)
-  new_list = []
-  lst.each do |num|
-    new_list.append(yield(num))
+=begin
+def rock_judger(rocks_arr)
+  if rocks_arr.length <= 2
+    a = rocks_arr[0]
+    b = rocks_arr[-1]
+  else
+    a = rock_judger(rocks_arr.slice!(0,rocks_arr.length/2))
+    b = rock_judger(rocks_arr)
   end
-  p new_list
+
+  return a > b ? a : b
 end
 
-add_two(lst) do |num|
-  num + 2
-end
+rocks = 30.times.map{rand(200) + 1}
+=end
+
