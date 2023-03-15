@@ -26,5 +26,10 @@ describe Caesar_cipher do
       cipher = Caesar_cipher.new
       expect(cipher.translate('Gg', -5)).to eq('Bb')
     end
+
+    it "Woks with big negative shift and small word" do 
+      cipher = Caesar_cipher.new
+      expect(cipher.translate('Bb', -50)).to eq('Dd')
+    end
   end
 end
