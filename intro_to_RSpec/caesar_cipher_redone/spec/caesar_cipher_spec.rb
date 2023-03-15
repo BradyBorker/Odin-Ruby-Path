@@ -10,5 +10,6 @@ describe Caesar_cipher do
     it "Works with big positive shift and small word" do
       cipher = Caesar_cipher.new
       expect(cipher.translate('a', 50)).to eq('y')
+    end
   end
 end
