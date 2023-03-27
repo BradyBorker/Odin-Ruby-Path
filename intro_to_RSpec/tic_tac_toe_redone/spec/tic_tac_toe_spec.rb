@@ -59,14 +59,14 @@ describe Board do
         context 'When input is valid range but space is not empty' do
             it 'returns false' do
                 game.instance_variable_set(:@board, ['X','X','X','4','5','6','7','8','9'])
-                expect(game.valid_move?(1)).to_not be true
+                expect(game.valid_move?(1)).not_to be true
             end
         end
 
-        context 'When input is out of range and space is empty' do
+        context 'When input is out of range' do
             it 'returns false' do 
                 game.instance_variable_set(:@board, ['X','2','X','4','5','6','7','8','9'])
-                expect(game.valid_move?(100)).to_not be true
+                expect(game.valid_move?(100)).not_to be true
             end
         end
     end
