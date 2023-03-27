@@ -1,5 +1,5 @@
-require_relative 'board'
-require_relative 'player'
+require_relative 'board_class'
+require_relative 'player_class'
 
 def switch_players(current_player, player1, player2)
     if current_player == player1
@@ -9,7 +9,6 @@ def switch_players(current_player, player1, player2)
     end
     return current_player
 end
-
 
 player1 = Player.create_player
 player2 = Player.create_player
