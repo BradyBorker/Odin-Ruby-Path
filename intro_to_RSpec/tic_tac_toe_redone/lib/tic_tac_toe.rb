@@ -8,25 +8,20 @@ class Board
     end
 
     def make_move(player)
-        puts "#{player.name} Select a location between 1 and 9"
-        location = gets.chomp().to_i
+        puts "#{player.name} select a location between 1 and 9"
+        location = gets.chomp().to_i - 1
         until valid_move?(location)
             puts "Invalid input: Needs to be between 1 and 9 and empty"
-            location = gets.chomp().to_i
+            location = gets.chomp().to_i - 1
         end
-        location -= 1
 
         @board[location] = player.sign
-        remove_space()
+        @spaces_remaining -= 1
         print_board()
     end
 
     def valid_move?(input)
-        return true if input.between?(1, 9) && @board[input] != 'X' || @board[input] != 'O'
-    end
-
-    def remove_space()
-        @spaces_remaining -= 1
+        return true if input.between?(0, 8) && (@board[input] != 'X' && @board[input] != 'O')
     end
 
     def game_over?(player)
@@ -48,7 +43,7 @@ class Board
             puts "IT IS A TIE!"
             return true
         end
-        
+
         return false
     end
 
