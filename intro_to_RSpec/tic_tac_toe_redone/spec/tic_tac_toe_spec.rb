@@ -39,6 +39,13 @@ describe Board do
                 expect(game.game_over?(player)).to_not be true
             end
         end
+
+        context 'When spaces remaining is 0' do
+            it 'returns true' do
+                game.instance_variable_set(:@spaces_remaining, 0)
+                expect(game.game_over?(player)).to be true
+            end
+        end
     end
 
     describe '#valid_move?' do 
