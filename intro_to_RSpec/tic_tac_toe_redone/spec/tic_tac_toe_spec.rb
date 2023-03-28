@@ -72,16 +72,12 @@ describe Board do
     end
 
     describe '#make_move' do
-<<<<<<< HEAD
         it 'Places an X where the user specifies' do
             allow(game).to receive(:print_board)
             allow(game).to receive(:gets).and_return("1\n")
             game.make_move(player)
             expect(game.instance_variable_get(:@board)).to eq ['X','2','3','4','5','6','7','8','9']
-        end
-=======
-        
->>>>>>> 9446bb7 (Removed #make_move test)
+        end        
     end
 end
 
