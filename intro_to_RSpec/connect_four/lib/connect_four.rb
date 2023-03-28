@@ -23,6 +23,9 @@ loop do
         puts "Invalid Column Selected"
         column = gets.chomp().to_i - 1
     end
-    current_player = switch_players(current_player, player1, player2)
     game.print_board
+    ### Check win
+
+    ###
+    current_player = switch_players(current_player, player1, player2)
 end

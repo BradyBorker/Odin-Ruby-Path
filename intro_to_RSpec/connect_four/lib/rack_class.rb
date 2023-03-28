@@ -1,6 +1,9 @@
-class Rack 
+class Rack
+  attr_reader :last_token
+
   def initialize()
     @rack = Array.new(6) { Array.new(7, 'O') }
+    @last_token = nil
   end
 
   def place_token(player, column)
@@ -12,6 +15,7 @@ class Rack
       return false if row < 0
     end
 
+    @last_token = (row, column)
     @rack[row][column] = player.token
   end
 
