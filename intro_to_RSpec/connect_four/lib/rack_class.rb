@@ -1,6 +1,4 @@
 class Rack
-  attr_reader :last_token
-
   def initialize()
     @rack = Array.new(6) { Array.new(7, 'O') }
     @last_token = nil
@@ -15,7 +13,7 @@ class Rack
       return false if row < 0
     end
 
-    @last_token = (row, column)
+    @last_token = [row, column]
     @rack[row][column] = player.token
   end
 
@@ -39,6 +37,3 @@ class Rack
     puts ''
   end
 end
-
-# 7 columns
-# 6 rows

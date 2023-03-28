@@ -44,6 +44,22 @@ describe Rack do
     end
 
     describe '#not_in_range?' do
+        subject(:game) { described_class.new }
 
+        context 'Column is within range' do
+            it 'does not return true' do
+                expect(game.not_in_range?(3)).to_not be true
+            end
+        end
+
+        context 'Column is not within range' do
+            it 'returns true when > 6' do
+                expect(game.not_in_range?(10)).to be true
+            end
+
+            it 'returns true when < 0' do
+                expect(game.not_in_range?(-1)).to be true
+            end
+        end
     end
 end
