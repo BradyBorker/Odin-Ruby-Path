@@ -25,6 +25,26 @@ class Rack
     return true if @rack[row][column] == 'O'
   end
 
+  def game_over?
+    return false
+  end
+
+  def check_horizontal
+
+  end
+
+  def check_vertical
+
+  end
+
+  def check_positive_diag
+
+  end
+
+  def check_negative_diag
+
+  end
+
   def print_board
     puts ''
     @rack.each do |row|
