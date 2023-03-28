@@ -17,7 +17,7 @@ game.print_board
 
 current_player = player1
 loop do
-    puts "Select a column to place a token"
+    puts "#{current_player.name} select a column to place a token"
     column = gets.chomp().to_i - 1
     until game.place_token(current_player, column)
         puts "Invalid Column Selected"

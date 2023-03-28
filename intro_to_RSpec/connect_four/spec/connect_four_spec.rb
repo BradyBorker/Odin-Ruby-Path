@@ -42,4 +42,8 @@ describe Rack do
             end
         end
     end
+
+    describe '#not_in_range?' do
+
+    end
 end

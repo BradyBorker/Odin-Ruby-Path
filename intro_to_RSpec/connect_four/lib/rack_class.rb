@@ -13,7 +13,6 @@ class Rack
     end
 
     @rack[row][column] = player.token
-    return true
   end
 
   def not_in_range?(column)

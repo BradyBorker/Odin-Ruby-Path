@@ -11,7 +11,7 @@ class Player
         puts "Enter Player Name: "
         name = gets.chomp()
         token_color = @@token_colors.shift
-        puts "Your color is #{token_color}"
+        puts "Your color is #{token_color.to_s.colorize(token_color)}"
         Player.new(name, token_color)
     end
 end
