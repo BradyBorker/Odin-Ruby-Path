@@ -110,7 +110,6 @@ describe Rack do
 
     describe '#check_vertical' do
       subject(:game) { described_class.new }
-      let(:player) { Player.new('Name', :red) }
 
       context 'When four tokens are connected vertically' do
         it 'returns true' do
@@ -132,6 +131,22 @@ describe Rack do
     end
 
     describe '#check_positive_diag' do
-      
+        subject(:game) { described_class.new }
+
+        context 'connects in pos diagonal' do
+            it 'returns true' do
+                red = 'O'.colorize(:red)
+                game.instance_variable_set(:@last_token, [3,0])
+                game.instance_variable_set(:@rack, [['O', 'O','O',red], ['O', 'O',red,'O'], ['O', red,'O','O'], [red, 'O','O','O'], ['O', 'O','O','O'], ['O', 'O','O','O']])
+                expect(game.check_positive_diag).to be true
+            end
+
+            it 'looks both ways and returnst true' do
+                red = 'O'.colorize(:red)
+                game.instance_variable_set(:@last_token, [1,2])
+                game.instance_variable_set(:@rack, [['O', 'O','O',red], ['O', 'O',red,'O'], ['O', red,'O','O'], [red, 'O','O','O'], ['O', 'O','O','O'], ['O', 'O','O','O']])
+                expect(game.check_positive_diag).to be true
+            end
+        end
     end
 end

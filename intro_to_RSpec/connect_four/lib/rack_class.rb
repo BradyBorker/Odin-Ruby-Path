@@ -62,7 +62,7 @@ class Rack
     token = @rack[row][column]
 
     counter = 0
-    while !(row > 5) && @rack[row][column] == token
+    while row <= 5 && @rack[row][column] == token
       counter += 1
       row += 1
 
@@ -71,7 +71,26 @@ class Rack
   end
 
   def check_positive_diag
+    row = @last_token[0]
+    column = @last_token[1]
+    token = @rack[row][column]
 
+    counter = 0
+    while row >= 0 && @rack[row][column] == token
+      counter += 1
+      row -= 1
+      column += 1
+    end
+
+    row = @last_token[0] + 1
+    column = @last_token[1] - 1
+    while row <= 5 && @rack[row][column] == token
+      counter += 1
+      row += 1
+      column -= 1
+    end
+
+    return true if counter >= 4
   end
 
   def check_negative_diag
