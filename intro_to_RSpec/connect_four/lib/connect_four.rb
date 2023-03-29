@@ -26,6 +26,7 @@ until game.game_over? do
         puts "Invalid Column Selected"
         column = gets.chomp().to_i - 1
     end
+    
     game.print_board
 end
 

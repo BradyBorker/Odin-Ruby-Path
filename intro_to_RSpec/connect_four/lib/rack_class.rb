@@ -57,7 +57,17 @@ class Rack
   end
 
   def check_vertical
+    row = @last_token[0]
+    column = @last_token[1]
+    token = @rack[row][column]
 
+    counter = 0
+    while !(row > 5) && @rack[row][column] == token
+      counter += 1
+      row += 1
+
+      return true if counter >= 4
+    end
   end
 
   def check_positive_diag

@@ -90,7 +90,6 @@ describe Rack do
 
     describe '#check_horizontal' do
       subject(:game) { described_class.new }
-      let(:player) { Player.new('Name', :red) }
 
       context 'When four of the same tokens are connected horizontally' do
         it 'returns true' do 
@@ -99,15 +98,40 @@ describe Rack do
           game.instance_variable_set(:@rack, [[red,red,red,red], ['O','O','O','O']])
           expect(game.check_horizontal).to be true
         end
-      end
 
-      context 'Connected horizontally, but looks both ways' do
-        it 'returns true' do
+        it 'looks both ways' do
           red = 'O'.colorize(:red)
           game.instance_variable_set(:@last_token, [0,2])
           game.instance_variable_set(:@rack, [[red,red,red,red], ['O','O','O','O']])
           expect(game.check_horizontal).to be true
         end
       end
+    end
+
+    describe '#check_vertical' do
+      subject(:game) { described_class.new }
+      let(:player) { Player.new('Name', :red) }
+
+      context 'When four tokens are connected vertically' do
+        it 'returns true' do
+          red = 'O'.colorize(:red)
+          game.instance_variable_set(:@last_token, [0,0])
+          game.instance_variable_set(:@rack, [[red, 'O'], [red, 'O'], [red, 'O'], [red, 'O']])
+          expect(game.check_vertical).to be true
+        end
+      end
+
+      context 'When it goes out of bounds' do
+        it 'does not return true' do
+          red = 'O'.colorize(:red)
+          game.instance_variable_set(:@last_token, [3,0])
+          game.instance_variable_set(:@rack, [['O', 'O'], ['O', 'O'], ['O', 'O'], [red, 'O'], [red,'O'], [red, 'O']])
+          expect(game.check_vertical).not_to be true
+        end
+      end
+    end
+
+    describe '#check_positive_diag' do
+      
     end
 end
