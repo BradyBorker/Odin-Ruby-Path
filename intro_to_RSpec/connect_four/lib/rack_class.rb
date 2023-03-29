@@ -15,18 +15,19 @@ class Rack
 
     @last_token = [row, column]
     @rack[row][column] = player.token
+    true
   end
 
   def not_in_range?(column)
-    return true if column < 0 || column > 6
+    column < 0 || column > 6
   end
 
   def empty_slot?(row, column)
-    return true if @rack[row][column] == 'O'
+    @rack[row][column] == 'O'
   end
 
   def game_over?
-    return false
+    [check_horizontal, check_vertical, check_negative_diag, check_positive_diag].any?
   end
 
   def check_horizontal

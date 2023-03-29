@@ -62,4 +62,26 @@ describe Rack do
             end
         end
     end
+
+    describe '#game_over?' do
+      subject(:game) { described_class.new }
+
+      context 'One of the checks (check_horizontal, check_vertical, etc) is true' do
+        it 'returns true' do
+          allow(game).to receive(:check_horizontal).and_return(true)
+          expect(game.game_over?).to be true
+        end
+      end
+
+      context 'None of the checks are true' do
+        it 'returns false' do
+          expect(game.game_over?).to_not be true
+        end
+      end
+    end
+
+    describe '#check_horizontal' do
+      subject(:game) { described_class.new }
+
+    end
 end
