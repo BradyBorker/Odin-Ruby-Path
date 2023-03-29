@@ -141,11 +141,31 @@ describe Rack do
                 expect(game.check_positive_diag).to be true
             end
 
-            it 'looks both ways and returnst true' do
+            it 'looks both ways and returns true' do
                 red = 'O'.colorize(:red)
                 game.instance_variable_set(:@last_token, [1,2])
                 game.instance_variable_set(:@rack, [['O', 'O','O',red], ['O', 'O',red,'O'], ['O', red,'O','O'], [red, 'O','O','O'], ['O', 'O','O','O'], ['O', 'O','O','O']])
                 expect(game.check_positive_diag).to be true
+            end
+        end
+    end
+
+    describe '#check_negative_diag' do
+        subject(:game) { described_class.new }
+
+        context 'connects in neg diagonal' do 
+            it 'returns true' do 
+                red = 'O'.colorize(:red)
+                game.instance_variable_set(:@last_token, [0,0])
+                game.instance_variable_set(:@rack, [[red, 'O','O','O'], ['O', red,'O','O'], ['O','O',red,'O'], ['O', 'O','O',red], ['O', 'O','O','O'], ['O', 'O','O','O']])
+                expect(game.check_negative_diag).to be true
+            end
+
+            it 'looks both ways and returns true' do
+                red = 'O'.colorize(:red)
+                game.instance_variable_set(:@last_token, [1,1])
+                game.instance_variable_set(:@rack, [[red, 'O','O','O'], ['O', red,'O','O'], ['O','O',red,'O'], ['O', 'O','O',red], ['O', 'O','O','O'], ['O', 'O','O','O']])
+                expect(game.check_negative_diag).to be true
             end
         end
     end
