@@ -71,9 +71,10 @@ describe Rack do
           allow(game).to receive(:check_negative_diag)
           allow(game).to receive(:check_positive_diag)
       end
-      
+
       context 'One of the checks (check_horizontal, check_vertical, etc) is true' do
         it 'returns true' do
+          game.instance_variable_set(:@first_call, false)
           allow(game).to receive(:check_horizontal).and_return(true)
           expect(game.game_over?).to be true
         end
@@ -95,6 +96,15 @@ describe Rack do
         it 'returns true' do 
           red = 'O'.colorize(:red)
           game.instance_variable_set(:@last_token, [0,0])
+          game.instance_variable_set(:@rack, [[red,red,red,red], ['O','O','O','O']])
+          expect(game.check_horizontal).to be true
+        end
+      end
+
+      context 'Connected horizontally, but looks both ways' do
+        it 'returns true' do
+          red = 'O'.colorize(:red)
+          game.instance_variable_set(:@last_token, [0,2])
           game.instance_variable_set(:@rack, [[red,red,red,red], ['O','O','O','O']])
           expect(game.check_horizontal).to be true
         end
