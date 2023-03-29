@@ -66,6 +66,12 @@ describe Rack do
     describe '#game_over?' do
       subject(:game) { described_class.new }
 
+      before do
+          allow(game).to receive(:check_vertical)
+          allow(game).to receive(:check_negative_diag)
+          allow(game).to receive(:check_positive_diag)
+      end
+      
       context 'One of the checks (check_horizontal, check_vertical, etc) is true' do
         it 'returns true' do
           allow(game).to receive(:check_horizontal).and_return(true)
@@ -75,6 +81,7 @@ describe Rack do
 
       context 'None of the checks are true' do
         it 'returns false' do
+          allow(game).to receive(:check_horizontal)
           expect(game.game_over?).to_not be true
         end
       end
@@ -82,6 +89,15 @@ describe Rack do
 
     describe '#check_horizontal' do
       subject(:game) { described_class.new }
+      let(:player) { Player.new('Name', :red) }
 
+      context 'When four of the same tokens are connected horizontally' do
+        it 'returns true' do 
+          red = 'O'.colorize(:red)
+          game.instance_variable_set(:@last_token, [0,0])
+          game.instance_variable_set(:@rack, [[red,red,red,red], ['O','O','O','O']])
+          expect(game.check_horizontal).to be true
+        end
+      end
     end
 end

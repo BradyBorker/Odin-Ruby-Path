@@ -31,7 +31,23 @@ class Rack
   end
 
   def check_horizontal
+    row = @last_token[0]
+    column = @last_token[1] + 1
+    token = @rack[row][column]
 
+    counter = 1
+    while @rack[row][column] == token 
+      counter += 1
+      column += 1
+    end
+    
+    column = @last_token[1] - 1
+    while @rack[row][column] == token
+      counter += 1
+      column -= 1
+    end
+
+    return true if counter >= 4
   end
 
   def check_vertical
