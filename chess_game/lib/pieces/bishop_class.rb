@@ -27,9 +27,11 @@ class Bishop
     pruned_moves = []
     moves.keys.each do |key|
       moves[key].each do |move|
-        if board_state[move[0]][move[1]].is_a? String
+        tile = board_state[move[0]][move[1]]
+
+        if tile.is_a? String
           pruned_moves.push(move)
-        elsif board_state[move[0]][move[1]].enemy == @enemy
+        elsif tile.color == @enemy
           pruned_moves.push(move)
           break
         else

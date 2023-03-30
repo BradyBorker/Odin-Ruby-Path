@@ -18,8 +18,8 @@ class Knight
 
   def get_valid_moves(board_state)
     moves = get_possible_moves()
-    #valid_moves = pruned_moves(board_state, moves)
-    #return valid_moves
+    valid_moves = prune_moves(board_state, moves)
+    return valid_moves
   end
 
   def get_possible_moves()
@@ -29,6 +29,15 @@ class Knight
       possible_moves.push(move) if !(out_of_bounds?(move))
     end
     return possible_moves
+  end
+
+  def prune_moves(board_state, moves)
+    pruned_moves = []
+    moves.each do |move|
+      tile = board_state[move[0]][move[1]]
+      pruned_moves.push(move) if tile.is_a?(String) || tile.color == @enemy
+    end
+    return pruned_moves
   end
 
   def out_of_bounds?(move)

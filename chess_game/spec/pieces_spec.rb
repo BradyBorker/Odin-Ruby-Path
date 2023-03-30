@@ -149,7 +149,7 @@ describe Bishop do
       let(:enemy) { double() }
 
       it 'returns all tiles up to and including enemy tile' do
-        allow(enemy).to receive(:enemy).and_return('black')
+        allow(enemy).to receive(:color).and_return('black')
         moves = {m: [[1,1], [2,2], [3,3], [4,4], [5,5]]}
         board_state = [[bishop,'',''], ['','',''],['','',enemy]]
         expect(bishop.prune_moves(board_state, moves)).to eq [[1,1],[2,2]]
@@ -161,7 +161,7 @@ describe Bishop do
       let(:allie) { double() }
 
       it 'returns all tiles up to allie' do
-        allow(allie).to receive(:enemy).and_return('white')
+        allow(allie).to receive(:color).and_return('white')
         moves = {m: [[1,1], [2,2], [3,3], [4,4], [5,5]]}
         board_state = [[bishop,'',''], ['','',''],['','',allie]]
         expect(bishop.prune_moves(board_state, moves)).to eq [[1,1]]
@@ -180,6 +180,26 @@ describe Knight do
     it 'does not return out of bound values' do
       knight.instance_variable_set(:@position, [0,0])
       expect(knight.get_possible_moves).to eq [[1,2], [2,1]]
+    end
+  end
+
+  describe '#prune_moves' do
+    subject(:knight) { described_class.new([0,0], 'white')}
+    let(:enemy) { double() }
+    let(:allie) { double() }
+
+    it 'returns spaces which contain an enemy' do
+      allow(enemy).to receive(:color).and_return('black')
+      board_state = [[knight,'',''],['','',enemy],['','','']]
+      moves = [[1,2], [2,1]]
+      expect(knight.prune_moves(board_state, moves)).to eq [[1,2], [2,1]]
+    end
+
+    it 'does not return a space which contains an allie' do
+      allow(allie).to receive(:color).and_return('white')
+      board_state = [[knight,'',''],['','',allie],['','','']]
+      moves = [[1,2], [2,1]]
+      expect(knight.prune_moves(board_state, moves)).to eq [[2,1]]
     end
   end
 end
