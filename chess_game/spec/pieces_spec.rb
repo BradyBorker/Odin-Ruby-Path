@@ -50,13 +50,39 @@ describe Pawn do
         allow(allie).to receive(:color).and_return('white')
 
         board_state = [[allie, ' ', allie], [' ', ' ', ' '], [' ', ' ', ' ']]
-        expect(pawn.prune_moves(board_state, [[0,1], [0,0], [0,2]])). to eq [[0,1]]   
+        expect(pawn.prune_moves(board_state, [[0,1], [0,0], [0,2]])).to eq [[0,1]]   
       end
     end
 
     context 'Has not moved yet' do
       it 'can move two spaces' do
+        pawn.instance_variable_set(:@first_move, true)
+        pawn.instance_variable_set(:@position, [2,1])
 
+        board_state = [['', ' ', ''], [' ', ' ', ' '], [' ', ' ', ' ']]
+        expect(pawn.prune_moves(board_state, [[1,1], [1,0], [1,2], [0, 1]])).to eq [[1,1],[0,1]]
+      end
+    end
+
+    context 'Has not moved yet but is being blocked' do
+      it 'returns an empty list' do
+        pawn.instance_variable_set(:@first_move, true)
+        pawn.instance_variable_set(:@position, [2,1])
+        allow(enemy).to receive(:color).and_return(:black)
+
+        board_state = [['', ' ', ''], [' ', enemy, ' '], [' ', ' ', ' ']]
+        expect(pawn.prune_moves(board_state, [[1,1], [1,0], [1,2], [0, 1]])).to eq []
+      end
+    end
+
+    context 'Has not moved yet but enemy is two spaces away' do
+      it 'returns one move' do
+        pawn.instance_variable_set(:@first_move, true)
+        pawn.instance_variable_set(:@position, [2,1])
+        allow(enemy).to receive(:color).and_return(:black)
+
+        board_state = [[' ', enemy, ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
+        expect(pawn.prune_moves(board_state, [[1,1], [1,0], [1,2], [0, 1]])).to eq [[1,1]]
       end
     end
   end

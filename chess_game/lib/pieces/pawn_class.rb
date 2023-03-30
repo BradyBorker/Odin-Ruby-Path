@@ -45,6 +45,7 @@ class Pawn
         else
           pruned_moves.push(move)
         end
+        
       else
         next if board_state[move[0]][move[1]] == ' '
         pruned_moves.push(move) if board_state[move[0]][move[1]].color == @enemy
