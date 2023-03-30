@@ -110,5 +110,35 @@ describe Pawn do
 end
 
 describe Bishop do
+  describe '#get_pos_row_pos_col' do
+    subject(:bishop) { described_class.new([3, 0], 'white') }
+    
+    it 'returns tiles that are +x +y' do 
+      expect(bishop.get_pos_row_pos_col(3, 0)).to eq [[2,1], [1,2], [0, 3]]
+    end
+  end
 
+  describe '#get_pos_row_neg_col' do
+    subject(:bishop) { described_class.new([3, 3], 'white') }
+
+    it 'returns tiles that are -x +y' do
+      expect(bishop.get_pos_row_neg_col(3,3)).to eq [[2,2], [1, 1], [0,0]]
+    end
+  end
+
+  describe '#get_neg_row_pos_col' do
+    subject(:bishop) { described_class.new([5,0], 'white') }
+
+    it 'returns tile that are +x -y' do
+      expect(bishop.get_neg_row_pos_col(5,0)).to eq [[6,1], [7,2]]
+    end
+  end
+
+  describe '#get_neg_row_neg_col' do
+    subject(:bishop) { described_class.new([5,2], 'white')}
+
+    it 'returns tiles that are -x -y' do
+      expect(bishop.get_neg_row_neg_col(5,2)).to eq [[6,1], [7,0]]
+    end
+  end
 end

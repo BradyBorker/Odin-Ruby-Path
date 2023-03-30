@@ -16,7 +16,7 @@ class Pawn
 
   def get_valid_moves(board_state)
       moves = get_possible_moves()
-      pruned_moves = prune_moves(board_state, moves)
+      valid_moves = prune_moves(board_state, moves)
   end
 
   def get_possible_moves()    
@@ -52,7 +52,7 @@ class Pawn
       end
     end
 
-    pruned_moves
+    return pruned_moves
   end
 
   def out_of_bounds?(move)
