@@ -172,6 +172,9 @@ end
 
 describe Knight do
   describe '#get_possible_moves' do
-
+    subject(:knight) { described_class.new([4,4], 'white') }
+    it 'returns all possible moves' do
+      expect(knight.get_possible_moves).to eq [[5,6], [6,5], [3,6], [2,5], [2,3], [3,2], [5,2], [6,3]]
+    end
   end
 end

@@ -25,8 +25,14 @@ class Knight
   def get_possible_moves()
     possible_moves = []
     Knight.transformations.each do |trans|
-      possible_moves.push([@position[0] + trans[0], @position[1] + trans[1]])
+      move = [trans[0] + @position[0], trans[1] + @position[1]]
+      possible_moves.push(move) if !(out_of_bounds?(move))
     end
     return possible_moves
+  end
+
+  def out_of_bounds?(move)
+    return true if !(move[0].between?(0, 7)) || !(move[1].between?(0, 7))
+    false
   end
 end
