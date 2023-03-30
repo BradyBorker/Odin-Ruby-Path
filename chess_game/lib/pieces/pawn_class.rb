@@ -38,16 +38,16 @@ class Pawn
       next if out_of_bounds?(move)
     
       if move[1] == @position[1]
-        if board_state[move[0]][move[1]] != ' '
+        if !(board_state[move[0]][move[1]].is_a? String)
           blocked = true
         elsif blocked
           next
         else
           pruned_moves.push(move)
         end
-        
+
       else
-        next if board_state[move[0]][move[1]] == ' '
+        next if board_state[move[0]][move[1]].is_a? String
         pruned_moves.push(move) if board_state[move[0]][move[1]].color == @enemy
       end
     end

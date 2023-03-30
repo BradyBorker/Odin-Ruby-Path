@@ -1,4 +1,5 @@
 require_relative '../lib/pieces/pawn_class'
+require_relative '../lib/pieces/bishop_class'
 
 describe Pawn do
   describe '#get_available_moves' do
@@ -109,5 +110,5 @@ describe Pawn do
 end
 
 describe Bishop do
-  
+
 end
