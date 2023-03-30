@@ -176,5 +176,10 @@ describe Knight do
     it 'returns all possible moves' do
       expect(knight.get_possible_moves).to eq [[5,6], [6,5], [3,6], [2,5], [2,3], [3,2], [5,2], [6,3]]
     end
+
+    it 'does not return out of bound values' do
+      knight.instance_variable_set(:@position, [0,0])
+      expect(knight.get_possible_moves).to eq [[1,2], [2,1]]
+    end
   end
 end
