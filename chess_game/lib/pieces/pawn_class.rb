@@ -21,22 +21,31 @@ class Pawn
 
   def get_available_moves()    
     if @color == 'white'
+      @@white_transformations.push([-2, 0]) if @first_move
       moves = @@white_transformations.map {|t| [@position[0] + t[0], @position[1] + t[1]]}
     elsif @color == 'black'
+      @@black_transformations.push([2, 0]) if @first_move
       moves = @@black_transformations.map {|t| [@position[0] + t[0], @position[1] + t[1]]}
-    end
+    end      
 
     return moves
   end
 
-  def prune_moves(board_state, moves)
+  def prune_moves(board_state, moves)    
     pruned_moves = []
-    moves.each_with_index do |move, index|
+    blocked = false
+    moves.each do |move|
       next if out_of_bounds?(move)
-
-      if index == 0
-        pruned_moves.push(move) if board_state[move[0]][move[1]] == ' '
-      elsif index >= 1
+    
+      if move[1] == @position[1]
+        if board_state[move[0]][move[1]] != ' '
+          blocked = true
+        elsif blocked
+          next
+        else
+          pruned_moves.push(move)
+        end
+      else
         next if board_state[move[0]][move[1]] == ' '
         pruned_moves.push(move) if board_state[move[0]][move[1]].color == @enemy
       end

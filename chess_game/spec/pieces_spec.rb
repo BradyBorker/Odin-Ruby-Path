@@ -5,12 +5,12 @@ describe Pawn do
     subject(:pawn) { described_class.new([1,1], 'white') }
 
     it 'returns moves available for white pawn' do
-      expect(pawn.get_available_moves).to eq [[0,1], [0,0], [0,2]]
+      expect(pawn.get_available_moves).to eq [[0,1], [0,0], [0,2], [-1,1]]
     end
 
     it 'returns moves available for black pawn' do
       pawn.instance_variable_set(:@color, 'black')
-      expect(pawn.get_available_moves).to eq [[2,1], [2,0], [2,2]]
+      expect(pawn.get_available_moves).to eq [[2,1], [2,0], [2,2], [3,1]]
     end
   end
 
@@ -51,6 +51,12 @@ describe Pawn do
 
         board_state = [[allie, ' ', allie], [' ', ' ', ' '], [' ', ' ', ' ']]
         expect(pawn.prune_moves(board_state, [[0,1], [0,0], [0,2]])). to eq [[0,1]]   
+      end
+    end
+
+    context 'Has not moved yet' do
+      it 'can move two spaces' do
+
       end
     end
   end
