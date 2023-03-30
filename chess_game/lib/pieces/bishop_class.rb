@@ -20,7 +20,7 @@ class Bishop
     row = @position[0]
     column = @position[1]
 
-    return {up_right: up_right(row, column), up_left: up_left(row, column), down_right: down_right(row, column), down_left: down_left(row, column)}
+    return {up_right: get_up_right(row, column), up_left: get_up_left(row, column), down_right: get_down_right(row, column), down_left: get_down_left(row, column)}
   end
 
   def prune_moves(board_state, moves)
@@ -41,7 +41,7 @@ class Bishop
     return pruned_moves
   end
 
-  def up_right(row, column)
+  def get_up_right(row, column)
     possible_moves = []
     row -= 1
     column += 1
@@ -55,7 +55,7 @@ class Bishop
     return possible_moves
   end
 
-  def up_left(row, column)
+  def get_up_left(row, column)
     possible_moves = []
     row -= 1
     column -= 1
@@ -69,7 +69,7 @@ class Bishop
     return possible_moves
   end
   
-  def down_right(row, column)
+  def get_down_right(row, column)
     possible_moves = []
     row += 1
     column += 1
@@ -83,7 +83,7 @@ class Bishop
     return possible_moves
   end
 
-  def down_left(row, column)
+  def get_down_left(row, column)
     possible_moves = []
     row += 1
     column -= 1

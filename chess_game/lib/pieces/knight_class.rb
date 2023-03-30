@@ -17,12 +17,16 @@ class Knight
   end
 
   def get_valid_moves(board_state)
-    #moves = get_possible_moves()
+    moves = get_possible_moves()
     #valid_moves = pruned_moves(board_state, moves)
     #return valid_moves
   end
 
   def get_possible_moves()
-
+    possible_moves = []
+    Knight.transformations.each do |trans|
+      possible_moves.push([@position[0] + trans[0], @position[1] + trans[1]])
+    end
+    return possible_moves
   end
 end
