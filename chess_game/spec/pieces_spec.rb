@@ -1,5 +1,6 @@
 require_relative '../lib/pieces/pawn_class'
 require_relative '../lib/pieces/bishop_class'
+require_relative '../lib/pieces/knight_class'
 
 describe Pawn do
   describe '#get_possible_moves' do
@@ -141,4 +142,34 @@ describe Bishop do
       expect(bishop.get_neg_row_neg_col(5,2)).to eq [[6,1], [7,0]]
     end
   end
+
+  describe '#prune_moves' do
+    context 'Bishop in corner one enemy' do
+      subject(:bishop) { described_class.new([0,0], 'white')}
+      let(:enemy) { double() }
+
+      it 'returns all tiles up to and including enemy tile' do
+        allow(enemy).to receive(:enemy).and_return('black')
+        moves = {m: [[1,1], [2,2], [3,3], [4,4], [5,5]]}
+        board_state = [[bishop,'',''], ['','',''],['','',enemy]]
+        expect(bishop.prune_moves(board_state, moves)).to eq [[1,1],[2,2]]
+      end
+    end
+
+    context 'Bishop in corner one allie' do
+      subject(:bishop) { described_class.new([0,0], 'white')}
+      let(:allie) { double() }
+
+      it 'returns all tiles up to allie' do
+        allow(allie).to receive(:enemy).and_return('white')
+        moves = {m: [[1,1], [2,2], [3,3], [4,4], [5,5]]}
+        board_state = [[bishop,'',''], ['','',''],['','',allie]]
+        expect(bishop.prune_moves(board_state, moves)).to eq [[1,1]]
+      end
+    end
+  end
+end
+
+describe Knight do
+
 end

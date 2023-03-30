@@ -11,15 +11,34 @@ class Bishop
   end
 
   def get_valid_moves(board_state)
-    moves = get_possible_moves(board_state)
+    moves = get_possible_moves()
+    valid_moves = pruned_moves(board_state, moves)
+    return valid_moves
   end
 
-  def get_possible_moves(board_state)
+  def get_possible_moves()
     row = @position[0]
     column = @position[1]
 
-    possible_moves = get_pos_row_pos_col(row, column)
-    possible_moves += get_pos_row_neg_col(row, column)
+    return {up_right: get_pos_row_pos_col(row, column), up_left: get_pos_row_neg_col(row, column), down_right: get_neg_row_pos_col(row, column), down_left: get_neg_row_neg_col(row, column)}
+  end
+
+  def prune_moves(board_state, moves)
+    pruned_moves = []
+    moves.keys.each do |key|
+      moves[key].each do |move|
+        if board_state[move[0]][move[1]].is_a? String
+          pruned_moves.push(move)
+        elsif board_state[move[0]][move[1]].enemy == @enemy
+          pruned_moves.push(move)
+          break
+        else
+          break
+        end
+      end
+    end
+
+    return pruned_moves
   end
 
   def get_pos_row_pos_col(row, column)
