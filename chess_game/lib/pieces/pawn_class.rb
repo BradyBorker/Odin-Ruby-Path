@@ -14,12 +14,12 @@ class Pawn
     color == 'white' ? @enemy = 'black' : @enemy = 'white'
   end
 
-  def move(board_state)
-      moves = get_available_moves()
+  def get_valid_moves(board_state)
+      moves = get_possible_moves()
       pruned_moves = prune_moves(board_state, moves)
   end
 
-  def get_available_moves()    
+  def get_possible_moves()    
     if @color == 'white'
       @@white_transformations.push([-2, 0]) if @first_move
       moves = @@white_transformations.map {|t| [@position[0] + t[0], @position[1] + t[1]]}

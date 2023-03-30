@@ -2,16 +2,16 @@ require_relative '../lib/pieces/pawn_class'
 require_relative '../lib/pieces/bishop_class'
 
 describe Pawn do
-  describe '#get_available_moves' do
+  describe '#get_possible_moves' do
     subject(:pawn) { described_class.new([1,1], 'white') }
 
     it 'returns moves available for white pawn' do
-      expect(pawn.get_available_moves).to eq [[0,1], [0,0], [0,2], [-1,1]]
+      expect(pawn.get_possible_moves).to eq [[0,1], [0,0], [0,2], [-1,1]]
     end
 
     it 'returns moves available for black pawn' do
       pawn.instance_variable_set(:@color, 'black')
-      expect(pawn.get_available_moves).to eq [[2,1], [2,0], [2,2], [3,1]]
+      expect(pawn.get_possible_moves).to eq [[2,1], [2,0], [2,2], [3,1]]
     end
   end
 
