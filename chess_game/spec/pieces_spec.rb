@@ -107,3 +107,7 @@ describe Pawn do
     end
   end
 end
+
+describe Bishop do
+  
+end
