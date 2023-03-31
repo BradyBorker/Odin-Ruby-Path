@@ -206,5 +206,11 @@ describe Knight do
 end
 
 describe Rook do
-
+  describe '#get_left' do
+    subject(:rook) { described_class.new([4,4], 'white') }
+    
+    it 'returns all tiles to the left' do
+      expect(rook.get_left(4,4)).to eq [[4,3],[4,2],[4,1],[4,0]]
+    end
+  end
 end
