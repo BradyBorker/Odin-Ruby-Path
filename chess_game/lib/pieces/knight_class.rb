@@ -8,7 +8,7 @@ class Knight
     @position = position
     @color = color
 
-    color == 'white' ? @piece = "\u2657" : @piece = "\u265D"
+    color == 'white' ? @piece = "\u2658" : @piece = "\u265E"
     color == 'white' ? @enemy = 'black' : @enemy = 'white'
   end
 

@@ -1,6 +1,7 @@
 require_relative '../lib/pieces/pawn_class'
 require_relative '../lib/pieces/bishop_class'
 require_relative '../lib/pieces/knight_class'
+require_relative '../lib/pieces/rook_class'
 
 describe Pawn do
   describe '#get_possible_moves' do
@@ -202,4 +203,8 @@ describe Knight do
       expect(knight.prune_moves(board_state, moves)).to eq [[2,1]]
     end
   end
+end
+
+describe Rook do
+
 end
