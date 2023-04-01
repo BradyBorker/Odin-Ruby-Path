@@ -21,7 +21,7 @@ class Board
       piece_list = get_pieces(pieces, row_index)
       row.each_with_index do |column, column_index|
         if row_index.between?(2, 5)
-          board[row_index][column_index] = ' '
+          board[row_index][column_index] = '   '
         else
           piece = piece_list[column_index]
           row_index.between?(0,1) ? color = 'black' : color = 'white'
@@ -46,12 +46,27 @@ class Board
 
   def print_board()
     @board.each_with_index do |row, row_index|
+      print "#{8 - row_index} "
+
       row.each_with_index do |column, column_index|
         tile = @board[row_index][column_index]
-        tile.is_a?(String) ? print(tile) : print(tile.piece)
+        if row_index % 2 == 0
+          if column_index % 2 == 0
+            print tile.is_a?(String) ? tile.colorize(:black).on_white : tile.piece.colorize(:black).on_white
+          else
+            print tile.is_a?(String) ? tile.colorize(:black).on_green : tile.piece.colorize(:black).on_green
+          end
+        else
+          if column_index % 2 == 0
+            print tile.is_a?(String) ? tile.colorize(:black).on_green : tile.piece.colorize(:black).on_green
+          else
+            print tile.is_a?(String) ? tile.colorize(:black).on_white : tile.piece.colorize(:black).on_white
+          end
+        end
       end
       puts ''
     end
+    puts "   a  b  c  d  e  f  g  h"
   end
 end
 
