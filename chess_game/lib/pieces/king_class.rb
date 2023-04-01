@@ -1,10 +1,13 @@
-attr_accessor :position, :first_move
+class King
+  attr_accessor :position, :has_moved
   attr_reader :piece, :color
+
+  @@TRANSFORMATIONS = [[-1,0], [1,0], [0,-1], [0,1], [-1,1], [-1,-1], [1,1], [1,-1]]
 
   def initialize(position, color)
     @position = position
     @color = color
-    @first_move = true
+    @has_moved = false
 
     color == 'white' ? @piece = "\u2654" : @piece = "\u265A"
     color == 'white' ? @enemy = 'black' : @enemy = 'white'
@@ -16,10 +19,20 @@ attr_accessor :position, :first_move
   end
 
   def get_possible_moves()
-    return 0
+    possible_moves = []
+    @@TRANSFORMATIONS.each do |trans|
+      move = [trans[0] + @position[0], trans[1] + @position[1]]
+      possible_moves.push(move) unless out_of_bounds?(move)
+    end
+    possible_moves
   end
 
   def prune_moves(board_state, moves)
     return 0
+  end
+
+  def out_of_bounds?(move)
+    return true if !(move[0].between?(0, 7)) || !(move[1].between?(0, 7))
+    false
   end
 end

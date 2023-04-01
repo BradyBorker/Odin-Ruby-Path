@@ -12,10 +12,6 @@ class Knight
     color == 'white' ? @enemy = 'black' : @enemy = 'white'
   end
 
-  def self.transformations 
-    @@TRANSFORMATIONS
-  end
-
   def get_valid_moves(board_state)
     moves = get_possible_moves()
     valid_moves = prune_moves(board_state, moves)
@@ -24,7 +20,7 @@ class Knight
 
   def get_possible_moves()
     possible_moves = []
-    Knight.transformations.each do |trans|
+    @@TRANSFORMATIONS.each do |trans|
       move = [trans[0] + @position[0], trans[1] + @position[1]]
       possible_moves.push(move) if !(out_of_bounds?(move))
     end

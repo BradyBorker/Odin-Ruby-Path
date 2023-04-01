@@ -1,5 +1,5 @@
 class Pawn 
-  attr_accessor :position, :first_move
+  attr_accessor :position, :has_moved
   attr_reader :piece, :color
 
   @@white_transformations = [[-1, 0], [-1, -1], [-1, 1]]
@@ -8,26 +8,26 @@ class Pawn
   def initialize(position, color)
     @position = position
     @color = color
-    @first_move = true
+    @has_moved = false
 
     color == 'white' ? @piece = "\u2659" : @piece = "\u265F"
     color == 'white' ? @enemy = 'black' : @enemy = 'white'
   end
 
   def get_valid_moves(board_state)
-      moves = get_possible_moves()
-      valid_moves = prune_moves(board_state, moves)
-      return valid_moves
+    moves = get_possible_moves()
+    valid_moves = prune_moves(board_state, moves)
+    return valid_moves
   end
 
   def get_possible_moves()    
     if @color == 'white'
-      @@white_transformations.push([-2, 0]) if @first_move
+      @@white_transformations.push([-2, 0]) unless @has_moved
       moves = @@white_transformations.map {|t| [@position[0] + t[0], @position[1] + t[1]]}
     elsif @color == 'black'
-      @@black_transformations.push([2, 0]) if @first_move
+      @@black_transformations.push([2, 0]) unless @has_moved
       moves = @@black_transformations.map {|t| [@position[0] + t[0], @position[1] + t[1]]}
-    end      
+    end
 
     return moves
   end

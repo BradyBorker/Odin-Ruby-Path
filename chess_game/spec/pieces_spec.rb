@@ -2,6 +2,7 @@ require_relative '../lib/pieces/pawn_class'
 require_relative '../lib/pieces/bishop_class'
 require_relative '../lib/pieces/knight_class'
 require_relative '../lib/pieces/rook_class'
+require_relative '../lib/pieces/king_class'
 
 describe Pawn do
   describe '#get_possible_moves' do
@@ -59,7 +60,7 @@ describe Pawn do
 
     context 'Has not moved yet' do
       it 'can move two spaces' do
-        pawn.instance_variable_set(:@first_move, true)
+        pawn.instance_variable_set(:@has_moved, false)
         pawn.instance_variable_set(:@position, [2,1])
 
         board_state = [['', ' ', ''], [' ', ' ', ' '], [' ', ' ', ' ']]
@@ -69,7 +70,7 @@ describe Pawn do
 
     context 'Has not moved yet but is being blocked' do
       it 'returns an empty list' do
-        pawn.instance_variable_set(:@first_move, true)
+        pawn.instance_variable_set(:@has_moved, false)
         pawn.instance_variable_set(:@position, [2,1])
         allow(enemy).to receive(:color).and_return(:black)
 
@@ -80,7 +81,7 @@ describe Pawn do
 
     context 'Has not moved yet but enemy is two spaces away' do
       it 'returns one move' do
-        pawn.instance_variable_set(:@first_move, true)
+        pawn.instance_variable_set(:@has_moved, false)
         pawn.instance_variable_set(:@position, [2,1])
         allow(enemy).to receive(:color).and_return(:black)
 
@@ -261,6 +262,16 @@ describe Rook do
         moves = {right: [[0,1], [0,2], [0,3]], down: [[1,0], [2,0], [3,0]]}
         expect(rook.prune_moves(board_state, moves)).to eq [[0,1],[1,0]]
       end
+    end
+  end
+end
+
+describe King do
+  describe '#get_possible_moves' do
+    subject(:king) { described_class.new([0,0], 'white') }
+
+    it 'returns all possible moves' do
+      expect(king.get_possible_moves).to eq [[1,0], [0,1], [1,1]]
     end
   end
 end
