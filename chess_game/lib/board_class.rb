@@ -18,14 +18,13 @@ class Board
     board = Array.new(8) { Array.new(8) }
     board.each_with_index do |row, row_index|
       piece_list = get_pieces(pieces, row_index)
-
       row.each_with_index do |column, column_index|
         if row_index.between?(2, 5)
           board[row_index][column_index] = ' '
         else
           piece = piece_list[column_index]
           row_index.between?(0,1) ? color = 'black' : color = 'white'
-          board[row_index][column_index] = piece.new([row, column], color)
+          board[row_index][column_index] = piece.new([row_index, column_index], color)
         end
       end
     end
@@ -45,7 +44,7 @@ class Board
   end
 
   def print_board()
-    p @board
+    return 0
   end
 end
 
