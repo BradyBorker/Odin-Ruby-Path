@@ -274,4 +274,20 @@ describe King do
       expect(king.get_possible_moves).to eq [[1,0], [0,1], [1,1]]
     end
   end
+
+  describe '#prune_moves' do
+    subject(:king) { described_class.new([0,0], 'white') }
+    let(:enemy) { double() }
+    let(:allie) { double() }
+
+    context 'One enemy one allie' do
+      it 'returns all up to and including enemy and all up to but allie' do
+        allow(enemy).to receive(:color).and_return('black')
+        allow(allie).to receive(:color).and_return('white')
+        board_state = [[king, allie], [enemy, '']]
+        moves = [[0,1], [1,0], [1,1]]
+        expect(king.prune_moves(board_state, moves)).to eq [[1,0], [1,1]]
+      end
+    end
+  end
 end

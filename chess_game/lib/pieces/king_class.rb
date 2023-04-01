@@ -28,7 +28,12 @@ class King
   end
 
   def prune_moves(board_state, moves)
-    return 0
+    pruned_moves = []
+    moves.each do |move|
+      tile = board_state[move[0]][move[1]]
+      pruned_moves.push(move) if tile.is_a?(String) || tile.color == @enemy
+    end
+    pruned_moves
   end
 
   def out_of_bounds?(move)
