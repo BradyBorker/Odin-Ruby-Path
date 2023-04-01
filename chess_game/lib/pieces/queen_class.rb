@@ -7,7 +7,7 @@ class Queen
     @color = color
     @has_moved = false
 
-    color == 'white' ? @piece = "\u2655" : @piece = "\u265B"
+    color == 'white' ? @piece = " \u2655 " : @piece = " \u265B "
     color == 'white' ? @enemy = 'black' : @enemy = 'white'
   end
 

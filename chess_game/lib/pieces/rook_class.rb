@@ -7,7 +7,7 @@ class Rook
     @color = color
     @has_moved = false
 
-    color == 'white' ? @piece = "\u2656" : @piece = "\u265C"
+    color == 'white' ? @piece = " \u2656 " : @piece = " \u265C "
     color == 'white' ? @enemy = 'black' : @enemy = 'white'
   end
 

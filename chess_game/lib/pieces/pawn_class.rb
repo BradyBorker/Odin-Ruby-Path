@@ -10,7 +10,7 @@ class Pawn
     @color = color
     @has_moved = false
 
-    color == 'white' ? @piece = "\u2659" : @piece = "\u265F"
+    color == 'white' ? @piece = " \u2659 " : @piece = " \u265F "
     color == 'white' ? @enemy = 'black' : @enemy = 'white'
   end
 

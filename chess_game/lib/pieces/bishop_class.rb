@@ -6,7 +6,7 @@ class Bishop
     @position = position
     @color = color
 
-    color == 'white' ? @piece = "\u2657" : @piece = "\u265D"
+    color == 'white' ? @piece = " \u2657 " : @piece = " \u265D "
     color == 'white' ? @enemy = 'black' : @enemy = 'white'
   end
 

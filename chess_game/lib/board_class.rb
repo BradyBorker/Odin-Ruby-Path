@@ -4,6 +4,7 @@ require_relative 'pieces/knight_class'
 require_relative 'pieces/rook_class'
 require_relative 'pieces/king_class'
 require_relative 'pieces/queen_class'
+require 'colorize'
 
 class Board
   def initialize()
@@ -44,7 +45,13 @@ class Board
   end
 
   def print_board()
-    return 0
+    @board.each_with_index do |row, row_index|
+      row.each_with_index do |column, column_index|
+        tile = @board[row_index][column_index]
+        tile.is_a?(String) ? print(tile) : print(tile.piece)
+      end
+      puts ''
+    end
   end
 end
 

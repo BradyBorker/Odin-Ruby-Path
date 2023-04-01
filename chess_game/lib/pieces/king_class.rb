@@ -9,7 +9,7 @@ class King
     @color = color
     @has_moved = false
 
-    color == 'white' ? @piece = "\u2654" : @piece = "\u265A"
+    color == 'white' ? @piece = " \u2654 " : @piece = " \u265A "
     color == 'white' ? @enemy = 'black' : @enemy = 'white'
   end
 
