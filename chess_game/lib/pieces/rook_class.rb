@@ -13,8 +13,8 @@ class Rook
 
   def get_valid_moves(board_state)
     moves = get_possible_moves()
-    #valid_moves = prune_moves(board_state, moves)
-    #return valid_moves
+    valid_moves = prune_moves(board_state, moves)
+    return valid_moves
   end
 
   def get_possible_moves()
@@ -24,9 +24,23 @@ class Rook
     return {left: get_left(row, column), right: get_right(row, column), up: get_up(row, column), down: get_down(row, column)}
   end
 
-  #def prune_moves()
-  #  next
-  #end
+  def prune_moves(board_state, moves)
+    pruned_moves = []
+    moves.keys.each do |key|
+      moves[key].each do |move|
+        tile = board_state[move[0]][move[1]]
+        if tile.is_a? String
+          pruned_moves.push(move)
+        elsif tile.color == @enemy
+          pruned_moves.push(move)
+          break
+        else
+          break
+        end
+      end
+    end
+    return pruned_moves
+  end
 
   def get_left(row, column)
     possible_moves = []
@@ -70,11 +84,11 @@ class Rook
 
     until out_of_bounds?([row, column])
       possible_moves.push([row, column])
+      row += 1
     end
 
     return possible_moves
   end
-
 
   def out_of_bounds?(move)
     return true if !(move[0].between?(0, 7)) || !(move[1].between?(0, 7))

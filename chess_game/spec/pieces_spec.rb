@@ -213,4 +213,54 @@ describe Rook do
       expect(rook.get_left(4,4)).to eq [[4,3],[4,2],[4,1],[4,0]]
     end
   end
+
+  describe '#get_right' do
+    subject(:rook) { described_class.new([4,4], 'white') }
+
+    it 'returns all tiles to the right' do
+      expect(rook.get_right(4,4)).to eq [[4,5],[4,6], [4,7]]
+    end
+  end
+
+  describe '#get_up' do
+    subject(:rook) { described_class.new([4, 4], 'white') }
+
+    it 'returns all tiles above' do
+      expect(rook.get_up(4, 4)).to eq [[3, 4], [2, 4], [1, 4], [0, 4]]
+    end
+  end
+
+  describe '#get_down' do
+    subject(:rook) { described_class.new([4, 4], 'white') }
+
+    it 'returns all tiles below' do
+      expect(rook.get_down(4, 4)).to eq [[5, 4], [6, 4], [7, 4]]
+    end
+  end
+
+  describe '#prune_move' do
+    subject(:rook) { described_class.new([0, 0], 'white') }
+
+    context 'There is an enemy' do
+      let(:enemy) { double() }
+
+      it 'returns all tiles up to and including enemy' do
+        allow(enemy).to receive(:color).and_return('black')
+        board_state = [[rook,'',enemy], ['','',''], [enemy,'','']]
+        moves = {right: [[0,1], [0,2], [0,3]], down: [[1,0], [2,0], [3,0]]}
+        expect(rook.prune_moves(board_state, moves)).to eq [[0,1],[0,2],[1,0],[2,0]]
+      end
+    end
+
+    context 'There is an allie' do
+      let(:allie) { double() }
+
+      it 'returns all tiles up to allie' do
+        allow(allie).to receive(:color).and_return('white')
+        board_state = [[rook,'',allie], ['','',''], [allie,'','']]
+        moves = {right: [[0,1], [0,2], [0,3]], down: [[1,0], [2,0], [3,0]]}
+        expect(rook.prune_moves(board_state, moves)).to eq [[0,1],[1,0]]
+      end
+    end
+  end
 end
