@@ -4,6 +4,8 @@ require_relative '../lib/pieces/knight_class'
 require_relative '../lib/pieces/rook_class'
 require_relative '../lib/pieces/king_class'
 
+
+
 describe Pawn do
   describe '#get_possible_moves' do
     subject(:pawn) { described_class.new([1,1], 'white') }
