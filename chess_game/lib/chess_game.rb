@@ -51,7 +51,7 @@ def get_first_input(player, board, conversions)
 
   unless my_piece?(row, column, board, player)
     puts 'Invalid input'
-    get_player_input(player, board, conversions) 
+    get_first_input(player, board, conversions) 
   end
 
   [row, column]
@@ -60,7 +60,7 @@ end
 def get_second_input(player, board, conversions, moves)
   player_input = gets.chomp
   until on_board(player_input)
-    puts "Invalid Input"
+    puts 'Invalid Input'
     player_input = gets.chomp
   end
   splitted_input = player_input.split('')
@@ -68,9 +68,7 @@ def get_second_input(player, board, conversions, moves)
   column = conversions[splitted_input[0].to_sym]
   row = conversions[splitted_input[1].to_sym]
 
-  if board[row][column].is_a?(Class) && board[row][column].color == player.color
-    [row, column]
-  elsif moves.include?([row, column])
+  if my_piece?(row, column, board, player) || moves.include?([row, column])
     [row, column]
   else
     puts 'Invalid Selection'
@@ -82,17 +80,18 @@ def on_board(player_input)
   chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
   nums = ['1', '2', '3', '4', '5', '6', '7', '8']
   split_input = player_input.split('')
-  
+
   chars.include?(split_input[0]) && nums.include?(split_input[1])
 end
 
 def my_piece?(row, column, board, player)
   return false if board[row][column].is_a? String
+
   board[row][column].color == player.color
 end
 
 def move_piece(piece, board, second_player_selection)
-  return false
+  false
 end
 
 board = Board.new
@@ -107,17 +106,25 @@ loop do
   board.print_board
   puts "#{current_player.name} Turn:"
   
+  first_player_selection = nil
   move_made = false
   until move_made
-    first_player_selection = get_first_input(current_player, board.board, conversions)
+    if first_player_selection.nil?
+      first_player_selection = get_first_input(current_player, board.board, conversions)
+    end
     piece = board.board[first_player_selection[0]][first_player_selection[1]]
     valid_moves = piece.get_valid_moves(board.board)
-    
+
     second_player_selection = get_second_input(current_player, board.board, conversions, valid_moves)
     row = second_player_selection[0]
     column = second_player_selection[1]
-    next if board[row][column].is_a?(Class) && board[row][column].color == player.color
-
+    if my_piece?(row, column, board.board, current_player)
+      first_player_selection = board.board[row][column]
+      next
+    else
+      first_player_selection = nil
+    end
+  
     move_made = move_piece(piece, board, second_player_selection)
     break
   end
