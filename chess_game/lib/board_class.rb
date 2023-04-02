@@ -69,7 +69,3 @@ class Board
     puts "   a  b  c  d  e  f  g  h"
   end
 end
-
-board = Board.new
-
-board.print_board
