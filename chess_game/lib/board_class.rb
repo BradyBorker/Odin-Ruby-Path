@@ -7,6 +7,8 @@ require_relative 'pieces/queen_class'
 require 'colorize'
 
 class Board
+  attr_reader :board
+  
   def initialize()
     @pieces = [[Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook],
                [Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn],
@@ -67,5 +69,6 @@ class Board
       puts ''
     end
     puts "   a  b  c  d  e  f  g  h"
+    puts ''
   end
 end
