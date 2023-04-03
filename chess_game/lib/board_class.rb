@@ -8,7 +8,7 @@ require 'colorize'
 
 class Board
   attr_reader :board
-  
+
   def initialize()
     @pieces = [[Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook],
                [Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn],
@@ -46,7 +46,7 @@ class Board
     end
   end
 
-  def print_board()
+  def print_board(highlighted=[])
     @board.each_with_index do |row, row_index|
       print "#{8 - row_index} "
 
@@ -54,15 +54,31 @@ class Board
         tile = @board[row_index][column_index]
         if row_index % 2 == 0
           if column_index % 2 == 0
-            print tile.is_a?(String) ? tile.colorize(:black).on_white : tile.piece.colorize(:black).on_white
+            if highlighted.include?([row_index, column_index])
+              print tile.is_a?(String) ? tile.colorize(:black).on_red : tile.piece.colorize(:black).on_red
+            else
+              print tile.is_a?(String) ? tile.colorize(:black).on_white : tile.piece.colorize(:black).on_white
+            end
           else
-            print tile.is_a?(String) ? tile.colorize(:black).on_green : tile.piece.colorize(:black).on_green
+            if highlighted.include?([row_index, column_index])
+              print tile.is_a?(String) ? tile.colorize(:black).on_red : tile.piece.colorize(:black).on_red
+            else
+              print tile.is_a?(String) ? tile.colorize(:black).on_green : tile.piece.colorize(:black).on_green
+            end
           end
         else
           if column_index % 2 == 0
-            print tile.is_a?(String) ? tile.colorize(:black).on_green : tile.piece.colorize(:black).on_green
+            if highlighted.include?([row_index, column_index])
+              print tile.is_a?(String) ? tile.colorize(:black).on_red : tile.piece.colorize(:black).on_red
+            else
+              print tile.is_a?(String) ? tile.colorize(:black).on_green : tile.piece.colorize(:black).on_green
+            end
           else
-            print tile.is_a?(String) ? tile.colorize(:black).on_white : tile.piece.colorize(:black).on_white
+            if highlighted.include?([row_index, column_index])
+              print tile.is_a?(String) ? tile.colorize(:black).on_red : tile.piece.colorize(:black).on_red
+            else
+              print tile.is_a?(String) ? tile.colorize(:black).on_white : tile.piece.colorize(:black).on_white
+            end
           end
         end
       end

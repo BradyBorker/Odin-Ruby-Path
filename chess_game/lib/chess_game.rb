@@ -91,6 +91,11 @@ def my_piece?(row, column, board, player)
 end
 
 def move_piece(piece, board, first_player_selection, row, column)
+  board.board[row][column] = piece
+  board.board[first_player_selection[0]][first_player_selection[1]] = '   '
+  piece.position = [row, column]
+  p board.board[first_player_selection[0]][first_player_selection[1]]
+  board.print_board
   true
 end
 
@@ -114,6 +119,7 @@ loop do
     end
     piece = board.board[first_player_selection[0]][first_player_selection[1]]
     valid_moves = piece.get_valid_moves(board.board)
+    board.print_board(valid_moves)
 
     second_player_selection = get_second_input(current_player, board.board, conversions, valid_moves)
     row = second_player_selection[0]
@@ -128,5 +134,4 @@ loop do
     move_made = move_piece(piece, board, first_player_selection, row, column)
     first_player_selection = nil
   end
-  break
 end

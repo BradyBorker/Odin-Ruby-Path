@@ -12,7 +12,7 @@ class Bishop
 
   def get_valid_moves(board_state)
     moves = get_possible_moves()
-    valid_moves = pruned_moves(board_state, moves)
+    valid_moves = prune_moves(board_state, moves)
     return valid_moves
   end
 
