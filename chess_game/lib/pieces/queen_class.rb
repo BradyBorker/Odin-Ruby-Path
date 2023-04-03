@@ -1,5 +1,5 @@
 class Queen
-  attr_accessor :position, :has_moved
+  attr_accessor :position
   attr_reader :piece, :color
 
   def initialize(position, color)

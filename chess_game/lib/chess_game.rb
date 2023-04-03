@@ -93,6 +93,8 @@ def move_piece(piece, board, first_player_selection, row, column)
   board.board[row][column] = piece
   board.board[first_player_selection[0]][first_player_selection[1]] = '   '
   piece.position = [row, column]
+  piece.has_moved = true if [Pawn, King, Rook].include?(piece.class)
+
   board.print_board
   true
 end
