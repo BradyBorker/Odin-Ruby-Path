@@ -90,8 +90,8 @@ def my_piece?(row, column, board, player)
   board[row][column].color == player.color
 end
 
-def move_piece(piece, board, second_player_selection)
-  false
+def move_piece(piece, board, first_player_selection, row, column)
+  true
 end
 
 board = Board.new
@@ -105,7 +105,7 @@ loop do
   current_player = switch_players(players, current_player)
   board.print_board
   puts "#{current_player.name} Turn:"
-  
+
   first_player_selection = nil
   move_made = false
   until move_made
@@ -119,13 +119,14 @@ loop do
     row = second_player_selection[0]
     column = second_player_selection[1]
     if my_piece?(row, column, board.board, current_player)
-      first_player_selection = board.board[row][column]
+      # Updates OG piece chosen to new piece
+      puts "Piece updated to: #{board.board[row][column].piece}"
+      first_player_selection = [row, column]
       next
-    else
-      first_player_selection = nil
     end
-  
-    move_made = move_piece(piece, board, second_player_selection)
-    break
+
+    move_made = move_piece(piece, board, first_player_selection, row, column)
+    first_player_selection = nil
   end
+  break
 end
