@@ -8,6 +8,7 @@ require 'colorize'
 
 class Board
   attr_reader :board
+  attr_accessor :white_king_position, :black_king_position
 
   def initialize()
     @pieces = [[Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook],
@@ -15,6 +16,8 @@ class Board
                [Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn],
                [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]]
     @board = build_board(@pieces)
+    @white_king_position = [7, 4]
+    @black_king_position = [0, 4]
   end
 
   def build_board(pieces)

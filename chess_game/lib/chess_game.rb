@@ -38,6 +38,20 @@ def switch_players(players, current_player)
   current_player
 end
 
+def on_board(player_input)
+  chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+  nums = ['1', '2', '3', '4', '5', '6', '7', '8']
+  split_input = player_input.split('')
+
+  chars.include?(split_input[0]) && nums.include?(split_input[1])
+end
+
+def my_piece?(row, column, board, player)
+  return false if board[row][column].is_a? String
+
+  board[row][column].color == player.color
+end
+
 def get_first_input(player, board, conversions)
   player_input = gets.chomp
   until on_board(player_input)
@@ -75,28 +89,27 @@ def get_second_input(player, board, conversions, moves)
   end
 end
 
-def on_board(player_input)
-  chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-  nums = ['1', '2', '3', '4', '5', '6', '7', '8']
-  split_input = player_input.split('')
+def update_positions(piece, board, row, column)
+  piece.position = [row, column]
 
-  chars.include?(split_input[0]) && nums.include?(split_input[1])
-end
-
-def my_piece?(row, column, board, player)
-  return false if board[row][column].is_a? String
-
-  board[row][column].color == player.color
+  if piece.is_a? King
+    board.white_king_position = [row, column] if piece.color == 'white'
+    board.black_king_position = [row, column] if piece.color == 'black'
+  end
 end
 
 def move_piece(piece, board, first_player_selection, row, column)
   board.board[row][column] = piece
   board.board[first_player_selection[0]][first_player_selection[1]] = '   '
-  piece.position = [row, column]
   piece.has_moved = true if [Pawn, King, Rook].include?(piece.class)
+  update_positions(piece, board, row, column)
 
   board.print_board
   true
+end
+
+def check
+  return 0
 end
 
 board = Board.new
@@ -105,6 +118,7 @@ current_player = players[1]
 number_conversion = { '1': 7, '2': 6, '3': 5, '4': 4, '5': 3, '6': 2, '7': 1, '8': 0 }
 letter_conversion = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7 }
 conversions = number_conversion.merge(letter_conversion)
+in_check = false
 
 loop do
   current_player = switch_players(players, current_player)
@@ -117,10 +131,7 @@ loop do
     if first_player_selection.nil?
       first_player_selection = get_first_input(current_player, board.board, conversions)
     end
-    p first_player_selection
-
     piece = board.board[first_player_selection[0]][first_player_selection[1]]
-    p piece
     valid_moves = piece.get_valid_moves(board.board)
     board.print_board(valid_moves)
 
@@ -135,6 +146,7 @@ loop do
     end
 
     move_made = move_piece(piece, board, first_player_selection, row, column)
+    in_check = check()
     first_player_selection = nil
   end
 end
