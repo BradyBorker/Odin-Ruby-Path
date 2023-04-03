@@ -51,9 +51,8 @@ def get_first_input(player, board, conversions)
 
   unless my_piece?(row, column, board, player)
     puts 'Invalid input'
-    get_first_input(player, board, conversions) 
+    return get_first_input(player, board, conversions) 
   end
-
   [row, column]
 end
 
@@ -94,7 +93,6 @@ def move_piece(piece, board, first_player_selection, row, column)
   board.board[row][column] = piece
   board.board[first_player_selection[0]][first_player_selection[1]] = '   '
   piece.position = [row, column]
-  p board.board[first_player_selection[0]][first_player_selection[1]]
   board.print_board
   true
 end
@@ -117,7 +115,10 @@ loop do
     if first_player_selection.nil?
       first_player_selection = get_first_input(current_player, board.board, conversions)
     end
+    p first_player_selection
+
     piece = board.board[first_player_selection[0]][first_player_selection[1]]
+    p piece
     valid_moves = piece.get_valid_moves(board.board)
     board.print_board(valid_moves)
 
