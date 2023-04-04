@@ -24,12 +24,14 @@ class Pawn
     if @color == 'white'
       @@white_transformations.push([-2, 0]) unless @has_moved
       moves = @@white_transformations.map {|t| [@position[0] + t[0], @position[1] + t[1]]}
+      @@white_transformations.pop if @@white_transformations.length > 3
     elsif @color == 'black'
       @@black_transformations.push([2, 0]) unless @has_moved
       moves = @@black_transformations.map {|t| [@position[0] + t[0], @position[1] + t[1]]}
+      @@black_transformations.pop if @@black_transformations.length > 3
     end
 
-    return moves
+    moves
   end
 
   def prune_moves(board_state, moves)    

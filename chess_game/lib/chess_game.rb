@@ -123,9 +123,6 @@ loop do
     end
 
     move_made = board.move_piece(piece, first_player_selection, row, column)
-    p piece
-    p board.white_king_position
-
     # in_check = check(board, piece)
     first_player_selection = nil
   end
