@@ -89,29 +89,6 @@ def get_second_input(player, board, conversions, moves)
   end
 end
 
-def update_positions(piece, board, row, column)
-  piece.position = [row, column]
-
-  if piece.is_a? King
-    board.white_king_position = [row, column] if piece.color == 'white'
-    board.black_king_position = [row, column] if piece.color == 'black'
-  end
-end
-
-def move_piece(piece, board, first_player_selection, row, column)
-  board.board[row][column] = piece
-  board.board[first_player_selection[0]][first_player_selection[1]] = '   '
-  piece.has_moved = true if [Pawn, King, Rook].include?(piece.class)
-  update_positions(piece, board, row, column)
-
-  board.print_board
-  true
-end
-
-def check
-  return 0
-end
-
 board = Board.new
 players = create_players(welcome_banner())
 current_player = players[1]
@@ -145,8 +122,11 @@ loop do
       next
     end
 
-    move_made = move_piece(piece, board, first_player_selection, row, column)
-    in_check = check()
+    move_made = board.move_piece(piece, first_player_selection, row, column)
+    p piece
+    p board.white_king_position
+
+    # in_check = check(board, piece)
     first_player_selection = nil
   end
 end

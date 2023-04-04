@@ -49,6 +49,25 @@ class Board
     end
   end
 
+  def move_piece(piece, first_player_selection, row, column)
+    @board[row][column] = piece
+    @board[first_player_selection[0]][first_player_selection[1]] = '   '
+    piece.has_moved = true if [Pawn, King, Rook].include?(piece.class)
+    update_positions(piece, row, column)
+  
+    print_board
+    true
+  end
+
+  def update_positions(piece, row, column)
+    piece.position = [row, column]
+  
+    if piece.is_a? King
+      @white_king_position = [row, column] if piece.color == 'white'
+      @black_king_position = [row, column] if piece.color == 'black'
+    end
+  end
+
   def print_board(highlighted=[])
     @board.each_with_index do |row, row_index|
       print "#{8 - row_index} "
