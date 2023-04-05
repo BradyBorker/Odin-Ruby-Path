@@ -1,6 +1,6 @@
 class Bishop
   attr_accessor :position
-  attr_reader :piece, :color
+  attr_reader :piece, :color, :enemy
 
   def initialize(position, color)
     @position = position

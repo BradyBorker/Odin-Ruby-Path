@@ -95,7 +95,6 @@ current_player = players[1]
 number_conversion = { '1': 7, '2': 6, '3': 5, '4': 4, '5': 3, '6': 2, '7': 1, '8': 0 }
 letter_conversion = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7 }
 conversions = number_conversion.merge(letter_conversion)
-in_check = false
 
 loop do
   current_player = switch_players(players, current_player)
@@ -123,7 +122,11 @@ loop do
     end
 
     move_made = board.move_piece(piece, first_player_selection, row, column)
-    # in_check = check(board, piece)
     first_player_selection = nil
   end
+
+  # TODO: In Check
+  in_check = board.check?(piece)
+  puts "#{piece.enemy} King in Check!" if in_check
+  board.checkmate?(piece, in_check)
 end

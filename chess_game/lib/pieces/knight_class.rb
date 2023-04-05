@@ -1,6 +1,6 @@
 class Knight
   attr_accessor :position
-  attr_reader :piece, :color
+  attr_reader :piece, :color, :enemy
 
   @@TRANSFORMATIONS = [[1,2], [2,1], [-1,2], [-2,1], [-2,-1], [-1,-2], [1,-2], [2,-1]].freeze
 

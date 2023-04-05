@@ -68,6 +68,36 @@ class Board
     end
   end
 
+  def check?(piece)
+    valid_moves = piece.get_valid_moves(@board)
+    if piece.color == 'white'
+      valid_moves.include?(@black_king_position)
+    elsif piece.color == 'black'
+      valid_moves.include?(@white_king_position)
+    end
+  end
+
+  def checkmate?(piece, in_check=false)
+    if piece.color == 'white'
+      king = @board[@black_king_position[0]][@black_king_position[1]]
+    elsif piece.color == 'black'
+      king = @board[@white_king_position[0]][@white_king_position[1]]
+    end
+    valid_moves = king.get_valid_moves(@board)
+
+    all_possible_allied_moves = []
+    @board.each do |row|
+      row.each do |column|
+        if @board[row][column].color == piece.color
+          new_piece = @board[row][column]
+          all_possible_allied_moves += new_piece.get_valid_moves(@board)
+        end
+      end
+    end
+    
+    valid_moves.all? { |move| all_possible_allied_moves.include?(move) }
+  end
+
   def print_board(highlighted=[])
     @board.each_with_index do |row, row_index|
       print "#{8 - row_index} "

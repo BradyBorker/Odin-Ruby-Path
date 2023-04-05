@@ -1,6 +1,6 @@
 class Pawn 
   attr_accessor :position, :has_moved
-  attr_reader :piece, :color
+  attr_reader :piece, :color, :enemy
 
   @@white_transformations = [[-1, 0], [-1, -1], [-1, 1]]
   @@black_transformations = [[1, 0], [1, -1], [1, 1]]
