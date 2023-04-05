@@ -18,6 +18,7 @@ class Board
     @board = build_board(@pieces)
     @white_king_position = [7, 4]
     @black_king_position = [0, 4]
+    @path_to_check = []
   end
 
   def build_board(pieces)
@@ -68,41 +69,52 @@ class Board
     end
   end
 
-  def check?(piece)
-    valid_moves = piece.get_valid_moves(@board)
-    if piece.color == 'white'
-      valid_moves.include?(@black_king_position)
-    elsif piece.color == 'black'
-      valid_moves.include?(@white_king_position)
-    end
+  def surrounded_by_allies(piece)
+    king = @board[@white_king_position[0]][@white_king_position[1]] if piece.color = 'black'
+    king = @board[@black_king_position[0]][@black_king_position[1]] if piece.color = 'white'
+    possible_moves = king.get_possible_moves
+
+    possible_moves.all? { |move| move.color == piece.color || out_of_bounds?(move) }
   end
 
-  def checkmate?(piece)
-    if piece.color == 'white'
-      enemy_king = @board[@black_king_position[0]][@black_king_position[1]]
-    elsif piece.color == 'black'
-      enemy_kingking = @board[@white_king_position[0]][@white_king_position[1]]
-    end
-    # TODO: Find piece that threatens king. Check to see if any piece can kill it
-    #       If not and king cannot move then checkmate.
-    enemy_king_valid_moves = enemy_king.get_valid_moves(@board)
+  def check?(piece)
+    valid_moves = piece.get_valid_moves(@board)
+    in_check = false
+    path_to_check = []
+    check_index = nil
 
-    all_possible_allied_moves = {}
-    all_possible_enemy_moves = {}
-    @board.each_with_index do |row, row_index|
-      row.each_with_index do |column, column_index|
-        tile = @board[row_index][column_index]
-        if !tile.is_a?(String) && tile.color == piece.color
-          allied_piece = @board[row_index][column_index]
-          all_possible_allied_moves[allied_piece] += allied_piece.get_valid_moves(@board) 
-        elsif !tile.is_a?(String) && tile.color == piece.color
-          enemy_piece = @board[row_index][column_index]
-          all_possible_enemy_moves[enemy_piece] += enemy_piece.get_valid_moves(@board)
+    if piece.color == 'white'
+      valid_moves.each_with_index do |move, index|
+        if move == @black_king_position
+          check_index = index
+          in_check = true
+        end
+      end
+    elsif piece.color == 'black'
+      valid_moves.each_with_index do |move, index|
+        if move == @white_king_position
+          check_index = index
+          in_check = true
         end
       end
     end
-    
-    
+
+    unless check_index.nil? || [Pawn, King, Knight].include?(piece.class)
+      until valid_moves[check_index] == piece.position
+        path_to_check.unshift(valid_moves[check_index])
+        check_index -= 1
+      end
+      path_to_check.unshift(piece.position)
+    end
+    @path_to_check = path_to_check
+
+    in_check
+  end
+
+  def checkmate?(piece)
+    in_check = board.check?(piece)
+    puts "#{piece.enemy} King in Check!" if in_check
+
 
   end
 
@@ -146,5 +158,10 @@ class Board
     end
     puts "   a  b  c  d  e  f  g  h"
     puts ''
+  end
+
+  def out_of_bounds?(move)
+    return true if !(move[0].between?(0, 7)) || !(move[1].between?(0, 7))
+    false
   end
 end
