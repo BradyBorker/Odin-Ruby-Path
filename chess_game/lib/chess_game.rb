@@ -128,5 +128,9 @@ loop do
   # TODO: In Check
   in_check = board.check?(piece)
   puts "#{piece.enemy} King in Check!" if in_check
-  is_checkmate = board.checkmate?(piece, in_check)
+  is_checkmate = board.checkmate?(piece)
+  if is_checkmate
+    puts "GAME WON"
+    break
+  end
 end

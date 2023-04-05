@@ -79,24 +79,31 @@ class Board
 
   def checkmate?(piece)
     if piece.color == 'white'
-      king = @board[@black_king_position[0]][@black_king_position[1]]
+      enemy_king = @board[@black_king_position[0]][@black_king_position[1]]
     elsif piece.color == 'black'
-      king = @board[@white_king_position[0]][@white_king_position[1]]
+      enemy_kingking = @board[@white_king_position[0]][@white_king_position[1]]
     end
-    valid_moves = king.get_valid_moves(@board)
+    # TODO: Find piece that threatens king. Check to see if any piece can kill it
+    #       If not and king cannot move then checkmate.
+    enemy_king_valid_moves = enemy_king.get_valid_moves(@board)
 
-    all_possible_allied_moves = []
+    all_possible_allied_moves = {}
+    all_possible_enemy_moves = {}
     @board.each_with_index do |row, row_index|
       row.each_with_index do |column, column_index|
         tile = @board[row_index][column_index]
         if !tile.is_a?(String) && tile.color == piece.color
-          new_piece = @board[row_index][column_index]
-          all_possible_allied_moves += new_piece.get_valid_moves(@board)
+          allied_piece = @board[row_index][column_index]
+          all_possible_allied_moves[allied_piece] += allied_piece.get_valid_moves(@board) 
+        elsif !tile.is_a?(String) && tile.color == piece.color
+          enemy_piece = @board[row_index][column_index]
+          all_possible_enemy_moves[enemy_piece] += enemy_piece.get_valid_moves(@board)
         end
       end
     end
     
-    valid_moves.all? { |move| all_possible_allied_moves.include?(move) }
+    
+
   end
 
   def print_board(highlighted=[])
