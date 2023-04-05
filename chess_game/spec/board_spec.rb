@@ -21,6 +21,18 @@ describe Board do
   end
 
   describe '#checkmate?' do
-
+    subject(:board) { described_class.new() }
+    let(:piece) { double() }
+    let(:king) { double() }
+    
+    it 'returns true when king is checkmated' do
+      allow(piece).to receive(:color).and_return('white')
+      allow(king).to receive(:color).and_return('black')
+      board.instance_variable_set(:@black_king_position, [0, 0])
+      allow(king).to receive(:get_valid_moves).and_return([[0, 1], [1, 0]])
+      board.instance_variable_set(:@board, [[king, '', piece], ['', piece, '']])
+      allow(piece).to receive(:get_valid_moves).and_return([[0, 1], [1, 0]])
+      expect(board.checkmate?(piece)).to be true
+    end
   end
 end

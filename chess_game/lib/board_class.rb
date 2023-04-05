@@ -77,7 +77,7 @@ class Board
     end
   end
 
-  def checkmate?(piece, in_check=false)
+  def checkmate?(piece)
     if piece.color == 'white'
       king = @board[@black_king_position[0]][@black_king_position[1]]
     elsif piece.color == 'black'
@@ -86,10 +86,11 @@ class Board
     valid_moves = king.get_valid_moves(@board)
 
     all_possible_allied_moves = []
-    @board.each do |row|
-      row.each do |column|
-        if @board[row][column].color == piece.color
-          new_piece = @board[row][column]
+    @board.each_with_index do |row, row_index|
+      row.each_with_index do |column, column_index|
+        tile = @board[row_index][column_index]
+        if !tile.is_a?(String) && tile.color == piece.color
+          new_piece = @board[row_index][column_index]
           all_possible_allied_moves += new_piece.get_valid_moves(@board)
         end
       end
