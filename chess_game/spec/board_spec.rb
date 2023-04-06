@@ -6,7 +6,7 @@ describe Board do
     let(:piece) { double() }
     
     it 'returns true when king is in check' do
-      allow(piece).to receive(:get_valid_moves).and_return([[4,1],[3,1], [2,1], [1,1], [0,1]])
+      allow(piece).to receive(:get_valid_moves).and_return([[2,1], [1,1], [0,1]])
       allow(piece).to receive(:color).and_return('white')
       allow(piece).to receive(:position).and_return([3,1])
       board.instance_variable_set(:@black_king_position, [0, 1])

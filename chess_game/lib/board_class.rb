@@ -69,6 +69,10 @@ class Board
     end
   end
 
+  def difference_between_points(first, second)
+    Math.sqrt((first[0] - second[0])**2 + (first[1] - second[1])**2).floor
+  end
+
   def surrounded_by_allies(piece)
     king = @board[@white_king_position[0]][@white_king_position[1]] if piece.color = 'black'
     king = @board[@black_king_position[0]][@black_king_position[1]] if piece.color = 'white'
@@ -100,14 +104,18 @@ class Board
     end
 
     unless check_index.nil? || [Pawn, King, Knight].include?(piece.class)
-      until valid_moves[check_index] == piece.position
+      # Change this to look for difference between two points
+      # So that difference is no greater then 1.
+      # sqrt( (x2 - x1)^2 + (y2 - y1)^2 )
+
+      until difference_between_points(valid_moves[check_index], piece.position) <= 1
         path_to_check.unshift(valid_moves[check_index])
         check_index -= 1
       end
       path_to_check.unshift(piece.position)
     end
     @path_to_check = path_to_check
-
+    p @path_to_check
     in_check
   end
 
