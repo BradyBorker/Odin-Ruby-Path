@@ -125,5 +125,5 @@ loop do
     first_player_selection = nil
   end
 
-  board.checkmate?(piece)
+  break if board.checkmate?(piece)
 end

@@ -101,9 +101,23 @@ class Board
     valid_moves.each do |move|
       new_valid_moves += move unless possible_attacks.include?(move)
     end
-    
+
     king.forced_move = new_valid_moves
-    valid_moves.empty? ? false : true
+    new_valid_moves.empty?
+  end
+
+  def defeat_check?(piece)
+    # Look for enemy pieces that block check path
+    possible_attacks = []
+    @board.each_with_index do |row, row_index|
+      row.each_with_index do |column, column_index|
+        tile = @board[row_index][column_index]
+        if !tile.is_a?(String) && tile.color == piece.enemy
+          attacks = tile.get_valid_moves(@board)
+          possible_attacks += attacks
+        end
+      end
+    end
   end
 
   def check?(piece)
@@ -148,8 +162,13 @@ class Board
 
     return false if !in_check && surrounded_by_allies(pieces)
     
-    escape_check?(piece)
-    
+    # Need to test 
+    king_cannot_escape = escape_check?(piece) if in_check
+
+    check_not_defeated = defeat_check?(piece) if in_check
+
+
+    false
   end
 
   def print_board(highlighted=[])
