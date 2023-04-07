@@ -86,11 +86,24 @@ class Board
     king = @board[@black_king_position[0]][@black_king_position[1]] if piece.color == 'white'
     valid_moves = king.get_valid_moves(@board)
 
-    @board.each do |row|
-      row.each do |column|
-        p column
+    possible_attacks = []
+    @board.each_with_index do |row, row_index|
+      row.each_with_index do |column, column_index|
+        tile = @board[row_index][column_index]
+        if !tile.is_a?(String) && tile.color == piece.color
+          attacks = tile.get_valid_moves(@board)
+          possible_attacks += attacks
+        end
       end
     end
+
+    new_valid_moves = []
+    valid_moves.each do |move|
+      new_valid_moves += move unless possible_attacks.include?(move)
+    end
+    
+    king.forced_move = new_valid_moves
+    valid_moves.empty? ? false : true
   end
 
   def check?(piece)

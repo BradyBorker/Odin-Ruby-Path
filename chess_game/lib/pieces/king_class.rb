@@ -1,5 +1,5 @@
 class King
-  attr_accessor :position, :has_moved
+  attr_accessor :position, :has_moved, :forced_move
   attr_reader :piece, :color, :enemy
 
   @@TRANSFORMATIONS = [[-1,0], [1,0], [0,-1], [0,1], [-1,1], [-1,-1], [1,1], [1,-1]]
