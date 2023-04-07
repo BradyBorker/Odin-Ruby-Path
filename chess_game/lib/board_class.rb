@@ -74,11 +74,23 @@ class Board
   end
 
   def surrounded_by_allies(piece)
-    king = @board[@white_king_position[0]][@white_king_position[1]] if piece.color = 'black'
-    king = @board[@black_king_position[0]][@black_king_position[1]] if piece.color = 'white'
+    king = @board[@white_king_position[0]][@white_king_position[1]] if piece.color == 'black'
+    king = @board[@black_king_position[0]][@black_king_position[1]] if piece.color == 'white'
     possible_moves = king.get_possible_moves
 
-    possible_moves.all? { |move| move.color == piece.color || out_of_bounds?(move) }
+    possible_moves.all? { |move| @board[move[0]][move[1]].color == king.color }
+  end
+
+  def escape_check?(piece)
+    king = @board[@white_king_position[0]][@white_king_position[1]] if piece.color == 'black'
+    king = @board[@black_king_position[0]][@black_king_position[1]] if piece.color == 'white'
+    valid_moves = king.get_valid_moves(@board)
+
+    @board.each do |row|
+      row.each do |column|
+        p column
+      end
+    end
   end
 
   def check?(piece)
@@ -104,18 +116,14 @@ class Board
     end
 
     unless check_index.nil? || [Pawn, King, Knight].include?(piece.class)
-      # Change this to look for difference between two points
-      # So that difference is no greater then 1.
-      # sqrt( (x2 - x1)^2 + (y2 - y1)^2 )
-
       until difference_between_points(valid_moves[check_index], piece.position) <= 1
         path_to_check.unshift(valid_moves[check_index])
         check_index -= 1
       end
-      path_to_check.unshift(piece.position)
     end
+    path_to_check.unshift(piece.position)
     @path_to_check = path_to_check
-    p @path_to_check
+    
     in_check
   end
 
@@ -123,7 +131,12 @@ class Board
     in_check = board.check?(piece)
     puts "#{piece.enemy} King in Check!" if in_check
 
+    # TODO: Remove forced moves 
 
+    return false if !in_check && surrounded_by_allies(pieces)
+    
+    escape_check?(piece)
+    
   end
 
   def print_board(highlighted=[])
@@ -166,10 +179,5 @@ class Board
     end
     puts "   a  b  c  d  e  f  g  h"
     puts ''
-  end
-
-  def out_of_bounds?(move)
-    return true if !(move[0].between?(0, 7)) || !(move[1].between?(0, 7))
-    false
   end
 end

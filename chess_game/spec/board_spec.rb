@@ -51,10 +51,10 @@ describe Board do
   describe '#surrounded_by_allies' do
     subject(:board) { described_class.new() }
     let(:piece) { double() }
-    let(:king) { double() }
 
-    xit 'returns true when surrounded by allies' do
-      allow(:piece).to receive(:color).and_return('white')
+    it 'returns true when surrounded by allies' do
+      allow(piece).to receive(:color).and_return('white')
+      expect(board.surrounded_by_allies(piece)).to be true
     end
   end
 end

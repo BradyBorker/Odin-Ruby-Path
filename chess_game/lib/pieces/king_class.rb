@@ -8,6 +8,7 @@ class King
     @position = position
     @color = color
     @has_moved = false
+    @forced_move = []
 
     color == 'white' ? @piece = " \u2654 " : @piece = " \u265A "
     color == 'white' ? @enemy = 'black' : @enemy = 'white'
