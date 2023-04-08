@@ -51,11 +51,15 @@ class Board
   end
 
   def move_piece(piece, first_player_selection, row, column)
-    @board[row][column] = piece
+    @board[row][column] = piece 
     @board[first_player_selection[0]][first_player_selection[1]] = '   '
     piece.has_moved = true if [Pawn, King, Rook].include?(piece.class)
     update_positions(piece, row, column)
-  
+    
+    if piece.class == Pawn && (row == 0 || row == 7)
+      new_piece = pawn_promotion()
+      @board[row][column] = new_piece.new([row, column], piece.color)
+    end
     true
   end
 
@@ -66,6 +70,19 @@ class Board
       @white_king_position = [row, column] if piece.color == 'white'
       @black_king_position = [row, column] if piece.color == 'black'
     end
+  end
+
+  def pawn_promotion()
+    puts "Select a piece to promote pawn to: "
+    puts "1. Queen 2. Knight 3. Bishop, 4. Rook "
+    choice = gets.chomp
+    until ['1','2','3','4'].include?(choice)
+      puts "Invalid input"
+      choice = gets.chomp
+    end
+
+    pieces = [Queen, Knight, Bishop, Rook]
+    piece_chosen = pieces[choice.to_i - 1]
   end
 
   def difference_between_points(first, second)
