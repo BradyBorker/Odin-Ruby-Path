@@ -56,7 +56,6 @@ class Board
     piece.has_moved = true if [Pawn, King, Rook].include?(piece.class)
     update_positions(piece, row, column)
   
-    print_board
     true
   end
 
