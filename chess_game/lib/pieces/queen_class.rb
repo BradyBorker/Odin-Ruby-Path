@@ -13,6 +13,8 @@ class Queen
   end
 
   def get_valid_moves(board_state)
+    return @forced_move unless @forced_move.nil?
+    
     moves = get_possible_moves()
     prune_moves(board_state, moves)
   end

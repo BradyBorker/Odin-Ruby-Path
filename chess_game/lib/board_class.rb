@@ -97,16 +97,10 @@ class Board
       end
     end
 
-    puts "King previous valid moves"
-    p valid_moves
-
     new_valid_moves = []
     valid_moves.each do |move|
       new_valid_moves += [move] unless possible_attacks.include?(move)
     end
-
-    puts "King new valid moves:"
-    p new_valid_moves
 
     king.forced_move = new_valid_moves if in_check
     new_valid_moves.empty? ? false : true

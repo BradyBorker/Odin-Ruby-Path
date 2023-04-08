@@ -14,9 +14,10 @@ class Knight
   end
 
   def get_valid_moves(board_state)
+    return @forced_move unless @forced_move.nil?
+
     moves = get_possible_moves()
-    valid_moves = prune_moves(board_state, moves)
-    return valid_moves
+    prune_moves(board_state, moves)
   end
 
   def get_possible_moves()
