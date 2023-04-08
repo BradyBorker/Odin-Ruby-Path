@@ -1,11 +1,12 @@
 class Queen
-  attr_accessor :position
+  attr_accessor :position, :forced_move
   attr_reader :piece, :color, :enemy
 
   def initialize(position, color)
     @position = position
     @color = color
     @has_moved = false
+    @forced_move = nil
 
     color == 'white' ? @piece = " \u2655 " : @piece = " \u265B "
     color == 'white' ? @enemy = 'black' : @enemy = 'white'

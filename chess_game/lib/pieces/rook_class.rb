@@ -1,11 +1,12 @@
 class Rook
-  attr_accessor :position, :has_moved
+  attr_accessor :position, :has_moved, :forced_move
   attr_reader :piece, :color, :enemy
 
   def initialize(position, color)
     @position = position
     @color = color
     @has_moved = false
+    @forced_move = nil
 
     color == 'white' ? @piece = " \u2656 " : @piece = " \u265C "
     color == 'white' ? @enemy = 'black' : @enemy = 'white'

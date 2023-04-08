@@ -170,9 +170,12 @@ class Board
     # TODO: Remove forced moves 
 
     return false if !in_check && surrounded_by_allies(pieces)
+    
     if in_check
       king_can_escape = escape_check?(piece)
       check_defeated = defeat_check?(piece)
+      # TODO: method that sets forced_moves = []
+      #       for pieces whose @forced_moves.nil?
     end
 
     false

@@ -1,10 +1,11 @@
 class Bishop
-  attr_accessor :position
+  attr_accessor :position, :forced_move
   attr_reader :piece, :color, :enemy
 
   def initialize(position, color)
     @position = position
     @color = color
+    @forced_move = nil
 
     color == 'white' ? @piece = " \u2657 " : @piece = " \u265D "
     color == 'white' ? @enemy = 'black' : @enemy = 'white'

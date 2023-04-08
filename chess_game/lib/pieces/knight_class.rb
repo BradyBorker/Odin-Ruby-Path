@@ -1,5 +1,5 @@
 class Knight
-  attr_accessor :position
+  attr_accessor :position, :forced_move
   attr_reader :piece, :color, :enemy
 
   @@TRANSFORMATIONS = [[1,2], [2,1], [-1,2], [-2,1], [-2,-1], [-1,-2], [1,-2], [2,-1]].freeze
@@ -7,6 +7,7 @@ class Knight
   def initialize(position, color)
     @position = position
     @color = color
+    @forced_move = nil
 
     color == 'white' ? @piece = " \u2658 " : @piece = " \u265E "
     color == 'white' ? @enemy = 'black' : @enemy = 'white'

@@ -1,5 +1,5 @@
 class Pawn 
-  attr_accessor :position, :has_moved
+  attr_accessor :position, :has_moved, :forced_move
   attr_reader :piece, :color, :enemy
 
   @@white_transformations = [[-1, 0], [-1, -1], [-1, 1]]
@@ -9,6 +9,7 @@ class Pawn
     @position = position
     @color = color
     @has_moved = false
+    @forced_move = nil
 
     color == 'white' ? @piece = " \u2659 " : @piece = " \u265F "
     color == 'white' ? @enemy = 'black' : @enemy = 'white'
