@@ -98,6 +98,47 @@ describe Board do
   end
 
   describe '#defeat_check?' do
+    context 'King is in check and the check can be defeated' do
+      subject (:board) { described_class.new }
+      let(:attacker) { double() }
+      let(:defender) { double() }
 
+      it 'returns true' do
+        allow(attacker).to receive(:color).and_return('white')
+        allow(defender).to receive(:color).and_return('black')
+        allow(attacker).to receive(:enemy).and_return('black')
+        allow(defender).to receive(:enemy).and_return('white')
+        allow(attacker).to receive(:get_valid_moves).and_return([[0,1]])
+        allow(defender).to receive(:get_valid_moves).and_return([[1,0]])
+        allow(defender).to receive(:forced_move=).with([[1,0]])
+        board.instance_variable_set(:@board, [[defender,'',''],[attacker, '', ''], ['','','']])
+        board.instance_variable_set(:@black_king_position, [0, 1])
+        board.instance_variable_set(:@path_to_check, [[1,0], [0,1]])
+        allow(defender).to receive(:get_valid_moves).with(board).and_return([[1,0],[2,0]])
+        expect(board.defeat_check?(attacker)).to eq true
+      end
+    end
+
+    context 'King is in check and check cannot be defeated' do 
+      subject (:board) { described_class.new }
+      let(:attacker) { double() }
+      let(:defender) { double() }
+
+      it 'returns false' do
+        allow(attacker).to receive(:color).and_return('white')
+        allow(defender).to receive(:color).and_return('black')
+        allow(attacker).to receive(:enemy).and_return('black')
+        allow(defender).to receive(:enemy).and_return('white')
+        allow(attacker).to receive(:get_valid_moves).and_return([[0,1]])
+        allow(defender).to receive(:get_valid_moves).and_return([[1,1]])
+        allow(defender).to receive(:forced_move=).with([])
+        board.instance_variable_set(:@board, [[defender,'',''],[attacker, '', ''], ['','','']])
+        board.instance_variable_set(:@black_king_position, [0, 1])
+        board.instance_variable_set(:@path_to_check, [[1,0], [0,1]])
+        allow(defender).to receive(:get_valid_moves).with(board).and_return([[1,0],[2,0]])
+        expect(board.defeat_check?(attacker)).to eq false
+      end
+    end 
   end
 end
+  
