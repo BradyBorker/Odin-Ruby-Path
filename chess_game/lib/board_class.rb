@@ -7,7 +7,7 @@ require_relative 'pieces/queen_class'
 require 'colorize'
 
 class Board
-  attr_reader :board, :players
+  attr_reader :board, :players, :current_player
   attr_accessor :white_king_position, :black_king_position
 
   def initialize(players)
@@ -20,6 +20,7 @@ class Board
     @black_king_position = [0, 4]
     @path_to_check = []
     @players = players
+    @current_player = @players[1]
   end
 
   def build_board(pieces)
@@ -49,6 +50,22 @@ class Board
     elsif row_index == 7
       piece_list = pieces[3]
     end
+  end
+
+  def switch_players()
+    if @current_player == @players[0]
+      @current_player = @players[1]
+    else
+      @current_player = @players[0]
+    end
+  end
+
+  def on_board(player_input)
+    chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+    nums = ['1', '2', '3', '4', '5', '6', '7', '8']
+    split_input = player_input.split('')
+  
+    chars.include?(split_input[0]) && nums.include?(split_input[1])
   end
 
   def move_piece(piece, first_player_selection, row, column)
