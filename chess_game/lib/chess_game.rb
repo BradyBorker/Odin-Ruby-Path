@@ -29,49 +29,57 @@ def welcome_banner()
   return Board.new([Player.create_player, Player.new('Computer')]) if gametype == '2'
 end
 
+def save_game(board)
+  Dir.mkdir('saved_games') unless Dir.exist?('saved_games')
+  saved_game = Marshal.dump(board)
+  filename = "saved_games/#{board.players[0].name}-#{board.players[1].name}-#{Time.now().strftime("%b-%w-%-I:%M%p")}"
+
+  File.open(filename, 'w') { |file| file.puts saved_game }
+  puts 'Game Saved!'
+end
+
 def load_game()
   puts 'INSIDE LOAD'
   return 0
 end
 
-def get_first_input(player, board, conversions)
+def get_first_input(board, conversions)
   player_input = gets.chomp
-  # save_game() if player_input.downcase == 'save'
+  save_game(board) if player_input.downcase == 'save'
   until board.on_board(player_input)
-    puts 'Invalid input'
+    puts 'Invalid input' unless player_input.downcase == 'save'
     player_input = gets.chomp
-  # save_game() if player_input.downcase == 'save'
+    save_game(board) if player_input.downcase == 'save'
   end
-  splitted_input = player_input.split('')
 
+  splitted_input = player_input.split('')
   column = conversions[splitted_input[0].to_sym]
   row = conversions[splitted_input[1].to_sym]
 
   unless board.my_piece?(row, column)
-    puts 'Invalid input'
-    return get_first_input(player, board.board, conversions)
+    puts 'Invalid input' unless player_input.downcase == 'save'
+    return get_first_input(board.board, conversions)
   end
   [row, column]
 end
 
-def get_second_input(player, board, conversions, moves)
+def get_second_input(board, conversions, moves)
   player_input = gets.chomp
-  # save_game() if player_input.downcase == 'save'
+  save_game(board) if player_input.downcase == 'save'
   until board.on_board(player_input)
-    puts 'Invalid Input'
+    puts 'Invalid Input' unless player_input.downcase == 'save'
     player_input = gets.chomp
-  # save_game() if player_input.downcase == 'save'
+    save_game(board) if player_input.downcase == 'save'
   end
   splitted_input = player_input.split('')
-
   column = conversions[splitted_input[0].to_sym]
   row = conversions[splitted_input[1].to_sym]
 
   if board.my_piece?(row, column) || moves.include?([row, column])
     [row, column]
   else
-    puts 'Invalid Selection'
-    get_second_input(player, board, conversions, moves)
+    puts 'Invalid Selection' unless player_input.downcase == 'save'
+    get_second_input(board, conversions, moves)
   end
 end
 
@@ -82,7 +90,7 @@ letter_conversion = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h
 conversions = number_conversion.merge(letter_conversion)
 
 until board.game_over?(resolution_code, board.current_player)
-  current_player = board.switch_players()
+  board.switch_players
   board.print_board
   puts "#{board.current_player.name} Turn:"
 
@@ -90,13 +98,13 @@ until board.game_over?(resolution_code, board.current_player)
   move_made = false
   until move_made
     if first_player_selection.nil?
-      first_player_selection = get_first_input(current_player, board, conversions)
+      first_player_selection = get_first_input(board, conversions)
     end
     piece = board.board[first_player_selection[0]][first_player_selection[1]]
     valid_moves = piece.get_valid_moves(board.board)
     board.print_board(valid_moves)
 
-    second_player_selection = get_second_input(current_player, board, conversions, valid_moves)
+    second_player_selection = get_second_input(board, conversions, valid_moves)
     row = second_player_selection[0]
     column = second_player_selection[1]
     if board.my_piece?(row, column)
