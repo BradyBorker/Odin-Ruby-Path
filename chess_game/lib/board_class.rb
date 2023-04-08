@@ -78,10 +78,10 @@ class Board
     king = @board[@black_king_position[0]][@black_king_position[1]] if piece.color == 'white'
     possible_moves = king.get_possible_moves
 
-    possible_moves.all? { |move| @board[move[0]][move[1]].color == king.color }
+    possible_moves.all? { |move| !@board[move[0]][move[1]].is_a?(String) && @board[move[0]][move[1]].color == king.color }
   end
 
-  def escape_check?(piece)
+  def escape_check?(piece, in_check)
     king = @board[@white_king_position[0]][@white_king_position[1]] if piece.color == 'black'
     king = @board[@black_king_position[0]][@black_king_position[1]] if piece.color == 'white'
     valid_moves = king.get_valid_moves(@board)
@@ -97,23 +97,28 @@ class Board
       end
     end
 
+    puts "King previous valid moves"
+    p valid_moves
+
     new_valid_moves = []
     valid_moves.each do |move|
-      new_valid_moves += move unless possible_attacks.include?(move)
+      new_valid_moves += [move] unless possible_attacks.include?(move)
     end
 
-    king.forced_move = new_valid_moves
+    puts "King new valid moves:"
+    p new_valid_moves
+
+    king.forced_move = new_valid_moves if in_check
     new_valid_moves.empty? ? false : true
   end
 
   def defeat_check?(piece)
-    # Look for enemy pieces that block check path
     check_defeated = false
     possible_defenses = {}
     @board.each_with_index do |row, row_index|
       row.each_with_index do |column, column_index|
         tile = @board[row_index][column_index]
-        if !tile.is_a?(String) && tile.color == piece.enemy
+        if !tile.is_a?(String) && tile.color == piece.enemy && tile.class != King
           defenses = tile.get_valid_moves(@board)
           possible_defenses[tile] = defenses
         end
@@ -127,6 +132,28 @@ class Board
       end
     end
     check_defeated
+  end
+
+  def set_forced_moves(piece)
+    @board.each_with_index do |row, row_index|
+      row.each_with_index do |column, column_index|
+        tile = @board[row_index][column_index]
+        if !tile.is_a?(String) && tile.color == piece.enemy
+          tile.forced_move = [] if tile.forced_move.nil?
+        end
+      end
+    end
+  end
+
+  def remove_forced_moves(piece)
+    @board.each_with_index do |row, row_index|
+      row.each_with_index do |column, column_index|
+        tile = @board[row_index][column_index]
+        if !tile.is_a?(String) && tile.color == piece.color
+          tile.forced_move = nil
+        end
+      end
+    end
   end
 
   def check?(piece)
@@ -164,21 +191,30 @@ class Board
   end
 
   def checkmate_or_draw?(piece, player)
-    in_check = board.check?(piece)
+    in_check = check?(piece)
     puts "#{piece.enemy} King in Check!" if in_check
 
-    # TODO: Remove forced moves 
-
-    return false if !in_check && surrounded_by_allies(pieces)
+    remove_forced_moves(piece)
+    return 0 if !in_check && surrounded_by_allies(piece)
     
     if in_check
-      king_can_escape = escape_check?(piece)
       check_defeated = defeat_check?(piece)
-      # TODO: method that sets forced_moves = []
-      #       for pieces whose @forced_moves.nil?
+      set_forced_moves(piece)
     end
+    king_can_escape = escape_check?(piece, in_check)
 
-    false
+    if king_can_escape || check_defeated
+      # Continue playing game
+      return 0
+    elsif in_check && !king_can_escape && !check_defeated
+      # Checkmate
+      puts "Checkmate!"
+      return 1
+    elsif !in_check && !king_can_escape
+      # Draw
+      puts "Draw"
+      return 2
+    end
   end
 
   def print_board(highlighted=[])
