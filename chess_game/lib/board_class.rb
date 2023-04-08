@@ -68,6 +68,12 @@ class Board
     chars.include?(split_input[0]) && nums.include?(split_input[1])
   end
 
+  def my_piece?(row, column)
+    return false if @board[row][column].is_a? String
+  
+    @board[row][column].color == @current_player.color
+  end
+
   def move_piece(piece, first_player_selection, row, column)
     @board[row][column] = piece 
     @board[first_player_selection[0]][first_player_selection[1]] = '   '

@@ -34,12 +34,6 @@ def load_game()
   return 0
 end
 
-def my_piece?(row, column, board, player)
-  return false if board[row][column].is_a? String
-
-  board[row][column].color == player.color
-end
-
 def get_first_input(player, board, conversions)
   player_input = gets.chomp
   # save_game() if player_input.downcase == 'save'
@@ -53,9 +47,9 @@ def get_first_input(player, board, conversions)
   column = conversions[splitted_input[0].to_sym]
   row = conversions[splitted_input[1].to_sym]
 
-  unless my_piece?(row, column, board.board, player)
+  unless board.my_piece?(row, column)
     puts 'Invalid input'
-    return get_first_input(player, board.board, conversions) 
+    return get_first_input(player, board.board, conversions)
   end
   [row, column]
 end
@@ -73,7 +67,7 @@ def get_second_input(player, board, conversions, moves)
   column = conversions[splitted_input[0].to_sym]
   row = conversions[splitted_input[1].to_sym]
 
-  if my_piece?(row, column, board.board, player) || moves.include?([row, column])
+  if board.my_piece?(row, column) || moves.include?([row, column])
     [row, column]
   else
     puts 'Invalid Selection'
@@ -105,7 +99,7 @@ until board.game_over?(resolution_code, board.current_player)
     second_player_selection = get_second_input(current_player, board, conversions, valid_moves)
     row = second_player_selection[0]
     column = second_player_selection[1]
-    if my_piece?(row, column, board.board, current_player)
+    if board.my_piece?(row, column)
       puts "Piece updated to: #{board.board[row][column].piece}"
       first_player_selection = [row, column]
       next
