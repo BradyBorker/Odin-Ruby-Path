@@ -125,5 +125,5 @@ loop do
     first_player_selection = nil
   end
 
-  break if board.checkmate?(piece)
+  resolution_code = board.checkmate_or_draw?(piece, current_player)
 end

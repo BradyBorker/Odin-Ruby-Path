@@ -103,21 +103,30 @@ class Board
     end
 
     king.forced_move = new_valid_moves
-    new_valid_moves.empty?
+    new_valid_moves.empty? ? false : true
   end
 
   def defeat_check?(piece)
     # Look for enemy pieces that block check path
-    possible_attacks = []
+    check_defeated = false
+    possible_defenses = {}
     @board.each_with_index do |row, row_index|
       row.each_with_index do |column, column_index|
         tile = @board[row_index][column_index]
         if !tile.is_a?(String) && tile.color == piece.enemy
-          attacks = tile.get_valid_moves(@board)
-          possible_attacks += attacks
+          defenses = tile.get_valid_moves(@board)
+          possible_defenses[tile] = defenses
         end
       end
     end
+
+    possible_defenses.each do |piece, moves|
+      if moves.any? { |move| @path_to_check.include?(move) }
+        check_defeated = true
+        piece.forced_move = moves
+      end
+    end
+    check_defeated
   end
 
   def check?(piece)
@@ -154,19 +163,17 @@ class Board
     in_check
   end
 
-  def checkmate?(piece)
+  def checkmate_or_draw?(piece, player)
     in_check = board.check?(piece)
     puts "#{piece.enemy} King in Check!" if in_check
 
     # TODO: Remove forced moves 
 
     return false if !in_check && surrounded_by_allies(pieces)
-    
-    # Need to test 
-    king_cannot_escape = escape_check?(piece) if in_check
-
-    check_not_defeated = defeat_check?(piece) if in_check
-
+    if in_check
+      king_can_escape = escape_check?(piece)
+      check_defeated = defeat_check?(piece)
+    end
 
     false
   end
