@@ -35,16 +35,29 @@ describe Board do
   describe '#checkmate_or_draw?' do
     subject(:board) { described_class.new() }
     let(:piece) { double() }
-    let(:king) { double() }
     
-    xit 'returns true when king is checkmated' do
-      allow(piece).to receive(:color).and_return('white')
-      allow(king).to receive(:color).and_return('black')
-      board.instance_variable_set(:@black_king_position, [0, 0])
-      allow(king).to receive(:get_valid_moves).and_return([[0, 1], [1, 0]])
-      board.instance_variable_set(:@board, [[king, '', piece], ['', piece, '']])
-      allow(piece).to receive(:get_valid_moves).and_return([[0, 1], [1, 0]])
-      expect(board.checkmate?(piece)).to be true
+    it 'returns 1 when king is checkmated' do
+      allow(board).to receive(:check?).with(piece).and_return(true)
+      allow(board).to receive(:remove_forced_moves).with(piece)
+      allow(board).to receive(:surrounded_by_allies).with(piece).and_return(false)
+      allow(board).to receive(:defeat_check?).with(piece).and_return(false)
+      allow(board).to receive(:set_forced_moves).with(piece)
+      allow(board).to receive(:escape_possible?).with(piece).and_return(false)
+      allow(board).to receive(:puts)
+      allow(piece).to receive(:enemy).and_return('black')
+      expect(board.checkmate_or_draw?(piece)).to eq 1
+    end
+
+    it 'returns 2 when draw' do
+      allow(board).to receive(:check?).with(piece).and_return(false)
+      allow(board).to receive(:remove_forced_moves).with(piece)
+      allow(board).to receive(:surrounded_by_allies).with(piece).and_return(false)
+      allow(board).to receive(:defeat_check?).with(piece).and_return(false)
+      allow(board).to receive(:set_forced_moves).with(piece)
+      allow(board).to receive(:escape_possible?).with(piece).and_return(false)
+      allow(board).to receive(:puts)
+      allow(piece).to receive(:enemy).and_return('black')
+      expect(board.checkmate_or_draw?(piece)).to eq 2
     end
   end
 
@@ -58,7 +71,7 @@ describe Board do
     end
   end
 
-  describe '#escape_check?' do
+  describe '#escape_possible?' do
     context 'King is in check and can escape' do
       subject (:board) { described_class.new }
       let(:piece) { double() }
@@ -69,10 +82,10 @@ describe Board do
         allow(piece).to receive(:get_valid_moves).and_return([[0,0], [2,0]])
         allow(king).to receive(:get_valid_moves).and_return([[0,1]])
         allow(king).to receive(:color).and_return('black')
-        allow(king).to receive(:forced_move=).with([0, 1])
+        allow(king).to receive(:forced_move=).with([[0, 1]])
         board.instance_variable_set(:@board, [[king,'',''],[piece, '', ''], ['','','']])
         board.instance_variable_set(:@black_king_position, [0, 0])
-        expect(board.escape_check?(piece)).to eq true
+        expect(board.escape_possible?(piece)).to eq true
       end
     end
 
@@ -92,7 +105,7 @@ describe Board do
         allow(king).to receive(:forced_move=).with([])
         board.instance_variable_set(:@board, [[king,'',''],[piece1, '', ''], ['','',piece2]])
         board.instance_variable_set(:@black_king_position, [0, 0])
-        expect(board.escape_check?(piece1)).to eq false
+        expect(board.escape_possible?(piece1)).to eq false
       end
     end
   end

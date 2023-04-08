@@ -73,6 +73,14 @@ class Board
     Math.sqrt((first[0] - second[0])**2 + (first[1] - second[1])**2).floor
   end
 
+  def mock_board(king_moves, piece)
+    mocked_board = Marshal.load(Marshal.dump(@board))
+    king_moves.each do |move|
+      mocked_board[move[0]][move[1]] = King.new([move[0], move[1]], piece.enemy)
+    end
+    mocked_board
+  end
+
   def surrounded_by_allies(piece)
     king = @board[@white_king_position[0]][@white_king_position[1]] if piece.color == 'black'
     king = @board[@black_king_position[0]][@black_king_position[1]] if piece.color == 'white'
@@ -81,7 +89,7 @@ class Board
     possible_moves.all? { |move| !@board[move[0]][move[1]].is_a?(String) && @board[move[0]][move[1]].color == king.color }
   end
 
-  def escape_check?(piece, in_check)
+  def escape_possible?(piece)
     king = @board[@white_king_position[0]][@white_king_position[1]] if piece.color == 'black'
     king = @board[@black_king_position[0]][@black_king_position[1]] if piece.color == 'white'
     valid_moves = king.get_valid_moves(@board)
@@ -91,7 +99,12 @@ class Board
       row.each_with_index do |column, column_index|
         tile = @board[row_index][column_index]
         if !tile.is_a?(String) && tile.color == piece.color
-          attacks = tile.get_valid_moves(@board)
+          if tile.class == Pawn
+            mocked_board = mock_board(valid_moves, piece)
+            attacks = tile.get_valid_moves(mocked_board)
+          else
+            attacks = tile.get_valid_moves(@board)
+          end
           possible_attacks += attacks
         end
       end
@@ -102,7 +115,7 @@ class Board
       new_valid_moves += [move] unless possible_attacks.include?(move)
     end
 
-    king.forced_move = new_valid_moves if in_check
+    king.forced_move = new_valid_moves
     new_valid_moves.empty? ? false : true
   end
 
@@ -184,30 +197,39 @@ class Board
     in_check
   end
 
-  def checkmate_or_draw?(piece, player)
+  def checkmate_or_draw?(piece)
     in_check = check?(piece)
     puts "#{piece.enemy} King in Check!" if in_check
 
     remove_forced_moves(piece)
     return 0 if !in_check && surrounded_by_allies(piece)
     
-    if in_check
-      check_defeated = defeat_check?(piece)
-      set_forced_moves(piece)
-    end
-    king_can_escape = escape_check?(piece, in_check)
+    check_defeated = defeat_check?(piece)
+    king_can_escape = escape_possible?(piece)
+    set_forced_moves(piece) if in_check
 
     if king_can_escape || check_defeated
       # Continue playing game
       return 0
     elsif in_check && !king_can_escape && !check_defeated
       # Checkmate
-      puts "Checkmate!"
       return 1
-    elsif !in_check && !king_can_escape
+    elsif !in_check && !king_can_escape && !check_defeated
       # Draw
-      puts "Draw"
       return 2
+    end
+  end
+
+  def game_over?(resolution_code, player)
+    if resolution_code == 0
+      false
+    elsif resolution_code == 1
+      puts "CHECKMATE!"
+      puts "#{player.name} has WON"
+      true
+    elsif resolution_code == 2
+      puts "DRAW"
+      true
     end
   end
 

@@ -92,11 +92,12 @@ end
 board = Board.new
 players = create_players(welcome_banner())
 current_player = players[1]
+resolution_code = 0
 number_conversion = { '1': 7, '2': 6, '3': 5, '4': 4, '5': 3, '6': 2, '7': 1, '8': 0 }
 letter_conversion = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7 }
 conversions = number_conversion.merge(letter_conversion)
 
-loop do
+until board.game_over?(resolution_code, current_player)
   current_player = switch_players(players, current_player)
   board.print_board
   puts "#{current_player.name} Turn:"
@@ -115,7 +116,6 @@ loop do
     row = second_player_selection[0]
     column = second_player_selection[1]
     if my_piece?(row, column, board.board, current_player)
-      # Updates OG piece chosen to new piece
       puts "Piece updated to: #{board.board[row][column].piece}"
       first_player_selection = [row, column]
       next
@@ -125,5 +125,5 @@ loop do
     first_player_selection = nil
   end
 
-  resolution_code = board.checkmate_or_draw?(piece, current_player)
+  resolution_code = board.checkmate_or_draw?(piece)
 end
