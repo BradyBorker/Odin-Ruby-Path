@@ -7,10 +7,10 @@ require_relative 'pieces/queen_class'
 require 'colorize'
 
 class Board
-  attr_reader :board
+  attr_reader :board, :players
   attr_accessor :white_king_position, :black_king_position
 
-  def initialize()
+  def initialize(players)
     @pieces = [[Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook],
                [Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn],
                [Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn],
@@ -19,6 +19,7 @@ class Board
     @white_king_position = [7, 4]
     @black_king_position = [0, 4]
     @path_to_check = []
+    @players = players
   end
 
   def build_board(pieces)

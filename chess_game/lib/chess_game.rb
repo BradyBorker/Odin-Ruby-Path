@@ -1,19 +1,37 @@
 require_relative 'board_class'
 require_relative 'player_class'
 
-def welcome_banner
+def welcome_banner()
   puts 'Welcome to Chess game!'
+  puts 'Load Game or New Game: '
+  puts '1. New Game'
+  puts '2. Load Game'
+  new_or_load = gets.chomp
+  until new_or_load.ord.between?(49, 50)
+    puts 'Input needs to be 1 or 2'
+    new_or_load = gets.chomp
+  end
+  puts ''
+
+  return load_game() if new_or_load == '2'
+
   puts 'Game Type:'
   puts '1. Player vs. Player'
   puts '2. Player vs. Computer'
-
-  choice = gets.chomp
-  until choice.ord.between?(49, 50)
+  gametype = gets.chomp
+  until gametype.ord.between?(49, 50)
     puts 'Input needs to be 1 or 2'
-    choice = gets.chomp
+    gametype = gets.chomp
   end
   puts ''
-  choice.to_i
+
+  Board.new([Player.create_player, Player.create_player]) if gametype == '1'
+  Board.new([Player.create_player, Player.new('Computer')]) if gametype == '2'
+end
+
+def load_game()
+  puts 'INSIDE LOAD'
+  return 0
 end
 
 def create_players(choice)
@@ -54,9 +72,11 @@ end
 
 def get_first_input(player, board, conversions)
   player_input = gets.chomp
+  # save_game() if player_input.downcase == 'save'
   until on_board(player_input)
     puts 'Invalid input'
     player_input = gets.chomp
+  # save_game() if player_input.downcase == 'save'
   end
   splitted_input = player_input.split('')
 
@@ -72,9 +92,11 @@ end
 
 def get_second_input(player, board, conversions, moves)
   player_input = gets.chomp
+  # save_game() if player_input.downcase == 'save'
   until on_board(player_input)
     puts 'Invalid Input'
     player_input = gets.chomp
+  # save_game() if player_input.downcase == 'save'
   end
   splitted_input = player_input.split('')
 
@@ -89,9 +111,8 @@ def get_second_input(player, board, conversions, moves)
   end
 end
 
-board = Board.new
-players = create_players(welcome_banner())
-current_player = players[1]
+board = 
+current_player = board.players[1]
 resolution_code = 0
 number_conversion = { '1': 7, '2': 6, '3': 5, '4': 4, '5': 3, '6': 2, '7': 1, '8': 0 }
 letter_conversion = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7 }
