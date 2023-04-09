@@ -39,8 +39,24 @@ def save_game(board)
 end
 
 def load_game()
-  puts 'INSIDE LOAD'
-  return 0
+  counter = 1
+  game_files = {}
+  Dir.each_child("saved_games") do |file|
+    game_files[counter] = file
+    counter += 1
+  end
+
+  game_files.each do |number, file|
+    puts "#{number}   #{file}"
+  end
+
+  choice = gets.chomp.to_i
+  until game_files.keys.include?(choice)
+    puts 'File does not exist'
+    choice = gets.chomp.to_i
+  end
+
+  File.open("saved_games/#{game_files[choice]}") { |file| Marshal.load(file.read) }
 end
 
 def get_first_input(board, conversions)
