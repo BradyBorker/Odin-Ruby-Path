@@ -132,6 +132,6 @@ until board.game_over?(resolution_code, board.current_player)
     first_player_selection = nil
   end
 
-  board.switch_players
   resolution_code = board.checkmate_or_draw?(piece)
+  board.switch_players
 end
