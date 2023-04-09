@@ -59,13 +59,22 @@ def load_game()
   File.open("saved_games/#{game_files[choice]}") { |file| Marshal.load(file.read) }
 end
 
+def player_choice_menu(player_choice, board)
+  if player_choice == 'save'
+    save_game(board)
+  elsif player_choice == 'exit'
+    exit
+  else
+    puts 'Invalid input'
+  end
+end
+
 def get_first_input(board, conversions)
   player_input = gets.chomp
-  save_game(board) if player_input.downcase == 'save'
+  player_choice_menu(player_input, board)
   until board.on_board(player_input)
-    puts 'Invalid input' unless player_input.downcase == 'save'
     player_input = gets.chomp
-    save_game(board) if player_input.downcase == 'save'
+    player_choice_menu(player_input, board)
   end
 
   splitted_input = player_input.split('')
@@ -73,7 +82,7 @@ def get_first_input(board, conversions)
   row = conversions[splitted_input[1].to_sym]
 
   unless board.my_piece?(row, column)
-    puts 'Invalid input' unless player_input.downcase == 'save'
+    puts 'Not your piece, try again'
     return get_first_input(board.board, conversions)
   end
   [row, column]
@@ -81,11 +90,10 @@ end
 
 def get_second_input(board, conversions, moves)
   player_input = gets.chomp
-  save_game(board) if player_input.downcase == 'save'
+  player_choice_menu(player_input, board)
   until board.on_board(player_input)
-    puts 'Invalid Input' unless player_input.downcase == 'save'
     player_input = gets.chomp
-    save_game(board) if player_input.downcase == 'save'
+    player_choice_menu(player_input, board)
   end
   splitted_input = player_input.split('')
   column = conversions[splitted_input[0].to_sym]
