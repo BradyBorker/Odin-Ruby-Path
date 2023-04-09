@@ -106,7 +106,6 @@ letter_conversion = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h
 conversions = number_conversion.merge(letter_conversion)
 
 until board.game_over?(resolution_code, board.current_player)
-  board.switch_players
   board.print_board
   puts "#{board.current_player.name} Turn:"
 
@@ -133,5 +132,6 @@ until board.game_over?(resolution_code, board.current_player)
     first_player_selection = nil
   end
 
+  board.switch_players
   resolution_code = board.checkmate_or_draw?(piece)
 end

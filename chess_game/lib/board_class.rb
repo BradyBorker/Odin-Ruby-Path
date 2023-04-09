@@ -20,7 +20,7 @@ class Board
     @black_king_position = [0, 4]
     @path_to_check = []
     @players = players
-    @current_player = @players[1]
+    @current_player = @players[0]
   end
 
   def build_board(pieces)
