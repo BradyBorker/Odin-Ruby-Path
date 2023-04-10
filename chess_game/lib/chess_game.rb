@@ -124,7 +124,10 @@ until board.game_over?(resolution_code, board.current_player)
       first_player_selection = get_first_input(board, conversions)
     end
     piece = board.board[first_player_selection[0]][first_player_selection[1]]
-    valid_moves = piece.get_valid_moves(board.board)
+    # Determine if moving this piece will put king in check
+    # Pieces to look for: Rook, Bishop, Queen
+    # valid_moves = piece.get_valid_moves(board.board)
+    valid_moves = get_legal_moves(piece)
     board.print_board(valid_moves)
 
     second_player_selection = get_second_input(board, conversions, valid_moves)

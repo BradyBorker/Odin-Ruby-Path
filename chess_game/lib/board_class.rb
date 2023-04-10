@@ -113,7 +113,7 @@ class Board
     Math.sqrt((first[0] - second[0])**2 + (first[1] - second[1])**2).floor
   end
 
-  def mock_board(king_moves, piece)
+  def mock_king_moves(king_moves, piece)
     mocked_board = Marshal.load(Marshal.dump(@board))
     king_moves.each do |move|
       mocked_board[move[0]][move[1]] = King.new([move[0], move[1]], piece.enemy)
@@ -129,6 +129,43 @@ class Board
     possible_moves.all? { |move| !@board[move[0]][move[1]].is_a?(String) && @board[move[0]][move[1]].color == king.color }
   end
 
+  def get_legal_moves(piece)
+    enemy_pieces = []
+    @board.each do |row|
+      row.each do |column|
+        if [Rook, Bishop, Queen].include?(column.class) && column.color == piece.enemy
+          enemy_pieces.push(column)
+        end
+      end
+    end
+
+    can_capture_piece = []
+    enemy_pieces.each do |enemy_piece|
+      if enemy_piece.valid_moves.include?(piece.position)
+        can_capture_piece.push(enemy_piece)
+      end
+    end
+    return piece.valid_moves if can_capture_piece.empty?
+
+    king = @board[@white_king_position[0]][@white_king_position[1]] if piece.color == 'black'
+    king = @board[@black_king_position[0]][@black_king_position[1]] if piece.color == 'white'
+    valid_moves = piece.valid_moves
+    pos = piece.position
+    piece.valid_moves.each do |move|
+      @board[move[0]][move[1]] = piece
+      @board[pos[0]][pos[1]] = '   '
+      can_capture_piece.each do |enemy_piece|
+        if enemy_piece.valid_moves.include?(king.position)
+          valid_moves -= move
+          break
+        end
+      end
+      @board[move[0]][move[1]] = '   '
+      @board[pos[0]][pos[1]] = piece
+    end
+    valid_moves
+  end
+
   def escape_possible?(piece)
     king = @board[@white_king_position[0]][@white_king_position[1]] if piece.color == 'black'
     king = @board[@black_king_position[0]][@black_king_position[1]] if piece.color == 'white'
@@ -140,7 +177,7 @@ class Board
         tile = @board[row_index][column_index]
         if !tile.is_a?(String) && tile.color == piece.color
           if tile.class == Pawn
-            mocked_board = mock_board(valid_moves, piece)
+            mocked_board = mock_king_moves(valid_moves, piece)
             attacks = tile.get_valid_moves(mocked_board)
           else
             attacks = tile.get_valid_moves(@board)
