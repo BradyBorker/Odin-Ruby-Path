@@ -2,7 +2,7 @@ require_relative '../lib/board_class'
 
 describe Board do
   describe '#check?' do 
-    subject(:board) { described_class.new() }
+    subject(:board) { described_class.new([]) }
     let(:piece) { double() }
     
     it 'returns true when king is in check' do
@@ -33,7 +33,7 @@ describe Board do
   end
 
   describe '#checkmate_or_draw?' do
-    subject(:board) { described_class.new() }
+    subject(:board) { described_class.new([]) }
     let(:piece) { double() }
     
     it 'returns 1 when king is checkmated' do
@@ -62,7 +62,7 @@ describe Board do
   end
 
   describe '#surrounded_by_allies' do
-    subject(:board) { described_class.new() }
+    subject(:board) { described_class.new([]) }
     let(:piece) { double() }
 
     it 'returns true when surrounded by allies' do
@@ -73,7 +73,7 @@ describe Board do
 
   describe '#escape_possible?' do
     context 'King is in check and can escape' do
-      subject (:board) { described_class.new }
+      subject (:board) { described_class.new([]) }
       let(:piece) { double() }
       let(:king) { double() }
 
@@ -90,7 +90,7 @@ describe Board do
     end
 
     context 'King is in check and cannot escape' do
-      subject(:board) { described_class.new }
+      subject(:board) { described_class.new([]) }
       let(:piece1) { double() }
       let(:piece2) { double() }
       let(:king) { double() }
@@ -112,7 +112,7 @@ describe Board do
 
   describe '#defeat_check?' do
     context 'King is in check and the check can be defeated' do
-      subject (:board) { described_class.new }
+      subject (:board) { described_class.new([]) }
       let(:attacker) { double() }
       let(:defender) { double() }
 
@@ -133,7 +133,7 @@ describe Board do
     end
 
     context 'King is in check and check cannot be defeated' do 
-      subject (:board) { described_class.new }
+      subject (:board) { described_class.new([]) }
       let(:attacker) { double() }
       let(:defender) { double() }
 
@@ -152,6 +152,31 @@ describe Board do
         expect(board.defeat_check?(attacker)).to eq false
       end
     end 
+  end
+
+  describe '#get_valid_moves' do
+    context 'Moving piece will put king in check' do
+      subject(:board) { described_class.new([]) }
+      let(:king) { double() }
+      let(:rook) { double() }
+      let(:pawn) { double() }
+
+      it 'returns empty list for valid moves' do
+        mock_board = [[king, pawn, '', '', rook], ['','','']]
+        board.instance_variable_set(:@board, mock_board)
+        board.instance_variable_set(:@white_king_position, [0,0])
+        allow(king).to receive(:position).and_return([0,0])
+        allow(rook).to receive(:class).and_return(Rook)
+        allow(rook).to receive(:color).and_return('black')
+        allow(rook).to receive(:get_valid_moves).and_return([[0,3],[0,2],[0,1]], [[0,3],[0,2],[0,1], [0,0]])
+        allow(pawn).to receive(:class).and_return(Pawn)
+        allow(pawn).to receive(:color).and_return('white')
+        allow(pawn).to receive(:get_valid_moves).and_return([[1,1]], [[1,1]])
+        allow(pawn).to receive(:enemy).and_return('black')
+        allow(pawn).to receive(:position).and_return([0,1])
+        expect(board.get_legal_moves(pawn)).to eq []
+      end
+    end
   end
 end
   

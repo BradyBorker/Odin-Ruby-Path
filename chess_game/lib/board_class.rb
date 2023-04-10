@@ -130,10 +130,11 @@ class Board
   end
 
   def get_legal_moves(piece)
+    valid_moves = piece.get_valid_moves
     enemy_pieces = []
     @board.each do |row|
       row.each do |column|
-        if [Rook, Bishop, Queen].include?(column.class) && column.color == piece.enemy
+        if !column.is_a?(String) && [Rook, Bishop, Queen].include?(column.class) && column.color == piece.enemy
           enemy_pieces.push(column)
         end
       end
@@ -141,22 +142,22 @@ class Board
 
     can_capture_piece = []
     enemy_pieces.each do |enemy_piece|
-      if enemy_piece.valid_moves.include?(piece.position)
+      if enemy_piece.get_valid_moves.include?(piece.position)
         can_capture_piece.push(enemy_piece)
       end
     end
-    return piece.valid_moves if can_capture_piece.empty?
 
-    king = @board[@white_king_position[0]][@white_king_position[1]] if piece.color == 'black'
-    king = @board[@black_king_position[0]][@black_king_position[1]] if piece.color == 'white'
-    valid_moves = piece.valid_moves
+    return valid_moves if can_capture_piece.empty?
+
+    king = @board[@white_king_position[0]][@white_king_position[1]] if piece.color == 'white'
+    king = @board[@black_king_position[0]][@black_king_position[1]] if piece.color == 'black'
     pos = piece.position
-    piece.valid_moves.each do |move|
+    piece.get_valid_moves.each do |move|
       @board[move[0]][move[1]] = piece
       @board[pos[0]][pos[1]] = '   '
       can_capture_piece.each do |enemy_piece|
-        if enemy_piece.valid_moves.include?(king.position)
-          valid_moves -= move
+        if enemy_piece.get_valid_moves.include?(king.position)
+          valid_moves -= [move]
           break
         end
       end
