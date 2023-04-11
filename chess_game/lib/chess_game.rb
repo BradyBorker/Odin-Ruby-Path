@@ -65,16 +65,21 @@ def player_choice_menu(player_choice, board)
   elsif player_choice == 'exit'
     exit
   else
-    puts 'Invalid input'
+    if board.on_board(player_choice)
+      true
+    else
+      puts 'Invalid Input'
+      false
+    end
   end
 end
 
 def get_first_input(board, conversions)
   player_input = gets.chomp
-  player_choice_menu(player_input, board)
-  until board.on_board(player_input)
+  valid_choice = player_choice_menu(player_input, board)
+  until valid_choice
     player_input = gets.chomp
-    player_choice_menu(player_input, board)
+    valid_choice = player_choice_menu(player_input, board)
   end
 
   splitted_input = player_input.split('')
@@ -83,17 +88,17 @@ def get_first_input(board, conversions)
 
   unless board.my_piece?(row, column)
     puts 'Not your piece, try again'
-    return get_first_input(board.board, conversions)
+    return get_first_input(board, conversions)
   end
   [row, column]
 end
 
 def get_second_input(board, conversions, moves)
   player_input = gets.chomp
-  player_choice_menu(player_input, board)
-  until board.on_board(player_input)
+  valid_choice = player_choice_menu(player_input, board)
+  until valid_choice
     player_input = gets.chomp
-    player_choice_menu(player_input, board)
+    valid_choice = player_choice_menu(player_input, board)
   end
   splitted_input = player_input.split('')
   column = conversions[splitted_input[0].to_sym]
@@ -127,7 +132,7 @@ until board.game_over?(resolution_code, board.current_player)
     # Determine if moving this piece will put king in check
     # Pieces to look for: Rook, Bishop, Queen
     # valid_moves = piece.get_valid_moves(board.board)
-    valid_moves = get_legal_moves(piece)
+    valid_moves = board.get_legal_moves(piece)
     board.print_board(valid_moves)
 
     second_player_selection = get_second_input(board, conversions, valid_moves)

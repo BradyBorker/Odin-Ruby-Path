@@ -130,7 +130,7 @@ class Board
   end
 
   def get_legal_moves(piece)
-    valid_moves = piece.get_valid_moves
+    valid_moves = piece.get_valid_moves(@board)
     enemy_pieces = []
     @board.each do |row|
       row.each do |column|
@@ -142,7 +142,7 @@ class Board
 
     can_capture_piece = []
     enemy_pieces.each do |enemy_piece|
-      if enemy_piece.get_valid_moves.include?(piece.position)
+      if enemy_piece.get_valid_moves(@board).include?(piece.position)
         can_capture_piece.push(enemy_piece)
       end
     end
@@ -152,11 +152,11 @@ class Board
     king = @board[@white_king_position[0]][@white_king_position[1]] if piece.color == 'white'
     king = @board[@black_king_position[0]][@black_king_position[1]] if piece.color == 'black'
     pos = piece.position
-    piece.get_valid_moves.each do |move|
+    piece.get_valid_moves(@board).each do |move|
       @board[move[0]][move[1]] = piece
       @board[pos[0]][pos[1]] = '   '
       can_capture_piece.each do |enemy_piece|
-        if enemy_piece.get_valid_moves.include?(king.position)
+        if enemy_piece.get_valid_moves(@board).include?(king.position)
           valid_moves -= [move]
           break
         end
