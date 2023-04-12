@@ -1,7 +1,7 @@
 require_relative 'board_class'
 require_relative 'player_class'
 
-def welcome_banner()
+def start_game()
   puts 'Welcome to Chess game!'
   puts 'Load Game or New Game: '
   puts '1. New Game'
@@ -112,7 +112,7 @@ def get_second_input(board, conversions, moves)
   end
 end
 
-board = welcome_banner()
+board = start_game()
 resolution_code = 0
 number_conversion = { '1': 7, '2': 6, '3': 5, '4': 4, '5': 3, '6': 2, '7': 1, '8': 0 }
 letter_conversion = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7 }
@@ -129,9 +129,6 @@ until board.game_over?(resolution_code, board.current_player)
       first_player_selection = get_first_input(board, conversions)
     end
     piece = board.board[first_player_selection[0]][first_player_selection[1]]
-    # Determine if moving this piece will put king in check
-    # Pieces to look for: Rook, Bishop, Queen
-    # valid_moves = piece.get_valid_moves(board.board)
     valid_moves = board.get_legal_moves(piece)
     board.print_board(valid_moves)
 

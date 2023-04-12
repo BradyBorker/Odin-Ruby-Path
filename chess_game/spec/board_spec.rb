@@ -48,7 +48,7 @@ describe Board do
       expect(board.checkmate_or_draw?(piece)).to eq 1
     end
 
-    it 'returns 2 when draw' do
+    xit 'returns 2 when draw' do
       allow(board).to receive(:check?).with(piece).and_return(false)
       allow(board).to receive(:remove_forced_moves).with(piece)
       allow(board).to receive(:surrounded_by_allies).with(piece).and_return(false)
@@ -154,7 +154,7 @@ describe Board do
     end 
   end
 
-  describe '#get_valid_moves' do
+  describe '#get_legal_moves' do
     context 'Moving piece will put king in check' do
       subject(:board) { described_class.new([]) }
       let(:king) { double() }

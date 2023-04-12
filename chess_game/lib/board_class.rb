@@ -113,10 +113,11 @@ class Board
     Math.sqrt((first[0] - second[0])**2 + (first[1] - second[1])**2).floor
   end
 
-  def mock_king_moves(king_moves, piece)
+  def mock_king_moves(king_moves, color)
     mocked_board = Marshal.load(Marshal.dump(@board))
+
     king_moves.each do |move|
-      mocked_board[move[0]][move[1]] = King.new([move[0], move[1]], piece.enemy)
+      mocked_board[move[0]][move[1]] = King.new([move[0], move[1]], color)
     end
     mocked_board
   end
@@ -127,6 +128,52 @@ class Board
     possible_moves = king.get_possible_moves
 
     possible_moves.all? { |move| !@board[move[0]][move[1]].is_a?(String) && @board[move[0]][move[1]].color == king.color }
+  end
+
+  def non_king_legal_moves(piece, can_capture_piece, valid_moves)
+    king = @board[@white_king_position[0]][@white_king_position[1]] if piece.color == 'white'
+    king = @board[@black_king_position[0]][@black_king_position[1]] if piece.color == 'black'
+    
+    pos = piece.position
+    piece.get_valid_moves(@board).each do |move|
+      hold_tile = @board[move[0]][move[1]]
+      @board[move[0]][move[1]] = piece
+      @board[pos[0]][pos[1]] = '   '
+      can_capture_piece.each do |enemy_piece|
+        if enemy_piece.get_valid_moves(@board).include?(king.position)
+          valid_moves -= [move]
+          break
+        end
+      end
+      @board[move[0]][move[1]] = hold_tile
+      @board[pos[0]][pos[1]] = piece
+    end
+    valid_moves
+  end
+
+  def king_legal_moves(king, can_capture_piece)
+    legal_moves = king.get_valid_moves(@board)
+
+    possible_attacks = []
+    @board.each_with_index do |row, row_index|
+      row.each_with_index do |column, column_index|
+        tile = @board[row_index][column_index]
+        if !tile.is_a?(String) && tile.color == king.enemy
+          if tile.class == Pawn
+            mocked_board = mock_king_moves(legal_moves, king.color)
+            tile.get_valid_moves(mocked_board).each do |move|
+              possible_attacks += [move] if tile.position[1] != move[1]
+            end
+          else
+            possible_attacks += tile.get_valid_moves(@board)
+          end
+        end
+      end
+    end
+
+    king.get_valid_moves(@board).each do |move|
+      legal_moves -= [move] if possible_attacks.include?(move)
+    end
   end
 
   def get_legal_moves(piece)
@@ -149,22 +196,10 @@ class Board
 
     return valid_moves if can_capture_piece.empty?
 
-    king = @board[@white_king_position[0]][@white_king_position[1]] if piece.color == 'white'
-    king = @board[@black_king_position[0]][@black_king_position[1]] if piece.color == 'black'
-    pos = piece.position
-    piece.get_valid_moves(@board).each do |move|
-      @board[move[0]][move[1]] = piece
-      @board[pos[0]][pos[1]] = '   '
-      can_capture_piece.each do |enemy_piece|
-        if enemy_piece.get_valid_moves(@board).include?(king.position)
-          valid_moves -= [move]
-          break
-        end
-      end
-      @board[move[0]][move[1]] = '   '
-      @board[pos[0]][pos[1]] = piece
-    end
-    valid_moves
+    legal_moves = non_king_legal_moves(piece, can_capture_piece, valid_moves) if piece.class != King
+    legal_moves = king_legal_moves(piece, can_capture_piece) if piece.class == King
+    
+    legal_moves
   end
 
   def escape_possible?(piece)
@@ -178,12 +213,13 @@ class Board
         tile = @board[row_index][column_index]
         if !tile.is_a?(String) && tile.color == piece.color
           if tile.class == Pawn
-            mocked_board = mock_king_moves(valid_moves, piece)
-            attacks = tile.get_valid_moves(mocked_board)
+            mocked_board = mock_king_moves(valid_moves, piece.enemy)
+            tile.get_valid_moves(mocked_board).each do |move|
+              possible_attacks += [move] if tile.position[1] != move[1]
+            end
           else
-            attacks = tile.get_valid_moves(@board)
+            possible_attacks += tile.get_valid_moves(@board)
           end
-          possible_attacks += attacks
         end
       end
     end
@@ -241,6 +277,25 @@ class Board
     end
   end
 
+  def no_legal_moves(attacking_piece)
+    # Return true if no legal moves
+    # piece is attacking piece
+    # Need to look for enemy pieces
+    defending_pieces = []
+    @board.each do |row|
+      row.each do |column|
+        if !column.is_a?(String) && column.color == piece.enemy
+          defending_pieces.push(column)
+        end
+      end
+    end
+
+    defending_pieces.each do |def_piece|
+      return false if !get_legal_moves(def_piece).empty?
+    end
+    true
+  end
+
   def check?(piece)
     valid_moves = piece.get_valid_moves(@board)
     in_check = false
@@ -292,7 +347,7 @@ class Board
     elsif in_check && !king_can_escape && !check_defeated
       # Checkmate
       return 1
-    elsif !in_check && !king_can_escape && !check_defeated
+    elsif !in_check && !king_can_escape && no_legal_moves(piece)
       # Draw
       return 2
     end
