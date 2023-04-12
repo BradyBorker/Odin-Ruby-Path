@@ -151,29 +151,8 @@ class Board
     valid_moves
   end
 
-  def king_legal_moves(king, can_capture_piece)
-    legal_moves = king.get_valid_moves(@board)
-
-    possible_attacks = []
-    @board.each_with_index do |row, row_index|
-      row.each_with_index do |column, column_index|
-        tile = @board[row_index][column_index]
-        if !tile.is_a?(String) && tile.color == king.enemy
-          if tile.class == Pawn
-            mocked_board = mock_king_moves(legal_moves, king.color)
-            tile.get_valid_moves(mocked_board).each do |move|
-              possible_attacks += [move] if tile.position[1] != move[1]
-            end
-          else
-            possible_attacks += tile.get_valid_moves(@board)
-          end
-        end
-      end
-    end
-
-    king.get_valid_moves(@board).each do |move|
-      legal_moves -= [move] if possible_attacks.include?(move)
-    end
+  def king_legal_moves(king, valid_moves)
+    
   end
 
   def get_legal_moves(piece)
@@ -197,7 +176,7 @@ class Board
     return valid_moves if can_capture_piece.empty?
 
     legal_moves = non_king_legal_moves(piece, can_capture_piece, valid_moves) if piece.class != King
-    legal_moves = king_legal_moves(piece, can_capture_piece) if piece.class == King
+    legal_moves = king_legal_moves(piece, valid_moves) if piece.class == King
     
     legal_moves
   end
@@ -224,10 +203,13 @@ class Board
       end
     end
 
+    # Fake king move if move keeps king in check remove move
     new_valid_moves = []
     valid_moves.each do |move|
       new_valid_moves += [move] unless possible_attacks.include?(move)
     end
+
+    p new_valid_moves
 
     king.forced_move = new_valid_moves
     new_valid_moves.empty? ? false : true
