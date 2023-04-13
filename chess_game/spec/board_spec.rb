@@ -42,10 +42,10 @@ describe Board do
       allow(board).to receive(:surrounded_by_allies).with(piece).and_return(false)
       allow(board).to receive(:defeat_check?).with(piece).and_return(false)
       allow(board).to receive(:set_forced_moves).with(piece)
-      allow(board).to receive(:escape_possible?).with(piece).and_return(false)
+      allow(board).to receive(:king_escape_possible?).with(piece).and_return(false)
       allow(board).to receive(:puts)
       allow(piece).to receive(:enemy).and_return('black')
-      expect(board.checkmate_or_draw?(piece)).to eq 1
+      expect(board.checkmate_or_draw?(piece, 'current_player')).to eq 1
     end
 
     xit 'returns 2 when draw' do
@@ -71,7 +71,7 @@ describe Board do
     end
   end
 
-  describe '#escape_possible?' do
+  describe '#king_escape_possible?' do
     context 'King is in check and can escape' do
       subject (:board) { described_class.new([]) }
       let(:piece) { double() }
@@ -83,9 +83,11 @@ describe Board do
         allow(king).to receive(:get_valid_moves).and_return([[0,1]])
         allow(king).to receive(:color).and_return('black')
         allow(king).to receive(:forced_move=).with([[0, 1]])
+        allow(king).to receive(:enemy).and_return('white')
+        allow(king).to receive(:position).and_return([0,0])
         board.instance_variable_set(:@board, [[king,'',''],[piece, '', ''], ['','','']])
         board.instance_variable_set(:@black_king_position, [0, 0])
-        expect(board.escape_possible?(piece)).to eq true
+        expect(board.king_escape_possible?(piece)).to eq true
       end
     end
 
@@ -103,9 +105,11 @@ describe Board do
         allow(king).to receive(:get_valid_moves).and_return([[0,1]])
         allow(king).to receive(:color).and_return('black')
         allow(king).to receive(:forced_move=).with([])
+        allow(king).to receive(:enemy).and_return('white')
+        allow(king).to receive(:position).and_return([0,0])
         board.instance_variable_set(:@board, [[king,'',''],[piece1, '', ''], ['','',piece2]])
         board.instance_variable_set(:@black_king_position, [0, 0])
-        expect(board.escape_possible?(piece1)).to eq false
+        expect(board.king_escape_possible?(piece1)).to eq false
       end
     end
   end
