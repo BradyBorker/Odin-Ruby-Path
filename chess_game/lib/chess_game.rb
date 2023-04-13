@@ -146,5 +146,5 @@ until board.game_over?(resolution_code)
   end
 
   resolution_code = board.checkmate_or_draw?(piece, board.current_player)
-  board.switch_players
+  board.switch_players()
 end
