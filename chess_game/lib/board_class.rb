@@ -113,15 +113,6 @@ class Board
     Math.sqrt((first[0] - second[0])**2 + (first[1] - second[1])**2).floor
   end
 
-  def mock_king_moves(king_moves, color)
-    mocked_board = Marshal.load(Marshal.dump(@board))
-
-    king_moves.each do |move|
-      mocked_board[move[0]][move[1]] = King.new([move[0], move[1]], color)
-    end
-    mocked_board
-  end
-
   def surrounded_by_allies(piece)
     king = @board[@white_king_position[0]][@white_king_position[1]] if piece.color == 'black'
     king = @board[@black_king_position[0]][@black_king_position[1]] if piece.color == 'white'
@@ -232,13 +223,16 @@ class Board
         end
       end
     end
-
-    possible_defenses.each do |piece, moves|
-      if moves.any? { |move| @path_to_check.include?(move) }
-        check_defeated = true
-        piece.forced_move = moves
+    
+    possible_defenses.each do |def_piece, moves|
+      moves.each do |move|
+       if @path_to_check.include?(move)
+          check_defeated = true
+        def_piece.forced_move = [move]
+        end
       end
     end
+
     check_defeated
   end
 
@@ -265,9 +259,6 @@ class Board
   end
 
   def no_legal_moves(attacking_piece)
-    # Return true if no legal moves
-    # piece is attacking piece
-    # Need to look for enemy pieces
     defending_pieces = get_enemy_pieces(@board, attacking_piece.enemy)
 
     possible_moves = []
