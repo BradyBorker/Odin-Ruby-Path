@@ -1,5 +1,5 @@
 require_relative 'board/board_class'
-require_relative 'player_class'
+require_relative 'players/player_class'
 
 def start_game()
   puts 'Welcome to Chess game!'
