@@ -1,9 +1,9 @@
-require_relative 'pieces/pawn_class'
-require_relative 'pieces/bishop_class'
-require_relative 'pieces/knight_class'
-require_relative 'pieces/rook_class'
-require_relative 'pieces/king_class'
-require_relative 'pieces/queen_class'
+require_relative '../pieces/pawn_class'
+require_relative '../pieces/bishop_class'
+require_relative '../pieces/knight_class'
+require_relative '../pieces/rook_class'
+require_relative '../pieces/king_class'
+require_relative '../pieces/queen_class'
 require 'colorize'
 
 class Board

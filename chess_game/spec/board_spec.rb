@@ -1,4 +1,4 @@
-require_relative '../lib/board_class'
+require_relative '../lib/board/board_class'
 
 describe Board do
   describe '#check?' do 

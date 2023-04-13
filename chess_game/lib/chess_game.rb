@@ -1,4 +1,4 @@
-require_relative 'board_class'
+require_relative 'board/board_class'
 require_relative 'player_class'
 
 def start_game()
