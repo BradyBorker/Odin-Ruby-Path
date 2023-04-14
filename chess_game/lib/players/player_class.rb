@@ -10,7 +10,10 @@ class Player
     announce()
   end
 
-  def self.create_player()
+  def self.create_player(chess_banner)
+    puts "\e[H\e[2J"
+    puts chess_banner
+
     puts "Enter Name"
     name = gets.chomp
     Player.new(name)

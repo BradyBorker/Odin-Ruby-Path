@@ -1,4 +1,10 @@
+
 def start_game()
+  chess_banner = File.read('/Users/brady.barker/repos/Odin-Ruby-Path/chess_game/lib/game_helper/chess_banner.txt')
+
+  puts "\e[H\e[2J"
+  puts chess_banner
+
   puts 'Welcome to Chess game!'
   puts 'Load Game or New Game: '
   puts '1. New Game'
@@ -8,9 +14,11 @@ def start_game()
     puts 'Input needs to be 1 or 2'
     new_or_load = gets.chomp
   end
-  puts ''
 
   return load_game() if new_or_load == '2'
+
+  puts "\e[H\e[2J"
+  puts chess_banner
 
   puts 'Game Type:'
   puts '1. Player vs. Player'
@@ -22,8 +30,8 @@ def start_game()
   end
   puts ''
 
-  return Board.new([Player.create_player, Player.create_player]) if gametype == '1'
-  return Board.new([Player.create_player, Player.new('Computer')]) if gametype == '2'
+  return Board.new([Player.create_player(chess_banner), Player.create_player(chess_banner)]) if gametype == '1'
+  return Board.new([Player.create_player(chess_banner), Player.new('Computer')]) if gametype == '2'
 end
 
 def player_choice_menu(player_choice, board)
