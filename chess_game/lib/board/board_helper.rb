@@ -29,10 +29,10 @@ module Board_Helper
   end
 
   def switch_players()
-    if self.current_player == self.players[0]
-      self.current_player = self.players[1]
+    if @current_player == @players[0]
+      @current_player = @players[1]
     else
-      self.current_player = self.players[0]
+      @current_player = @players[0]
     end
   end
 
@@ -47,7 +47,7 @@ module Board_Helper
   def my_piece?(row, column)
     return false if @board[row][column].is_a? String
   
-    self.board[row][column].color == self.current_player.color
+    @board[row][column].color == @current_player.color
   end
 
   def pawn_promotion()
