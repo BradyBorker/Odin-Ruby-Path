@@ -24,10 +24,10 @@ end
 
 def get_second_input(board, conversions, moves)
   player_input = gets.chomp
-  valid_choice = player_choice_menu(player_input, board)
+  valid_choice = player_choice_menu(player_input, board, moves)
   until valid_choice
     player_input = gets.chomp
-    valid_choice = player_choice_menu(player_input, board)
+    valid_choice = player_choice_menu(player_input, board, moves)
   end
   splitted_input = player_input.split('')
   column = conversions[splitted_input[0].to_sym]
@@ -49,7 +49,7 @@ conversions = number_conversion.merge(letter_conversion)
 
 until board.game_over?(resolution_code)
   board.print_board
-  puts "#{board.current_player.name} Turn:"
+  puts "#{board.current_player.name}'s turn:"
 
   first_player_selection = nil
   move_made = false

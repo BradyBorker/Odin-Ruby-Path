@@ -28,13 +28,26 @@ def start_game()
     puts 'Input needs to be 1 or 2'
     gametype = gets.chomp
   end
-  puts ''
+
+  puts "\e[H\e[2J"
+  puts chess_banner
+
+  puts "Type 'save' to save"
+  puts "Type 'exit' to exit"
+  puts "Press enter to continue"
+  input = gets.chomp()
+  until input == ""
+    input = gets.chomp()
+  end
 
   return Board.new([Player.create_player(chess_banner), Player.create_player(chess_banner)]) if gametype == '1'
   return Board.new([Player.create_player(chess_banner), Player.new('Computer')]) if gametype == '2'
 end
 
-def player_choice_menu(player_choice, board)
+def player_choice_menu(player_choice, board, moves=[])
+  puts "\e[H\e[2J"
+  puts board.print_board(moves)
+  
   if player_choice == 'save'
     save_game(board)
   elsif player_choice == 'exit'
