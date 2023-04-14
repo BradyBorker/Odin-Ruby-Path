@@ -9,7 +9,7 @@ require 'colorize'
 
 class Board
   include Board_Helper
-  attr_reader :board, :players
+  attr_reader :board, :players, :in_check
   attr_accessor :white_king_position, :black_king_position, :current_player
 
   def initialize(players)
@@ -218,8 +218,7 @@ class Board
   end
 
   def checkmate_or_draw?(piece, current_player)
-    in_check = check?(piece)
-    puts "#{piece.enemy} King in Check!" if in_check
+    @in_check = check?(piece)
 
     remove_forced_moves(piece)
     return 0 if !in_check && surrounded_by_allies(piece)

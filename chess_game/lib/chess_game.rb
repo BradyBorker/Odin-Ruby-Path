@@ -49,6 +49,7 @@ conversions = number_conversion.merge(letter_conversion)
 
 until board.game_over?(resolution_code)
   board.print_board
+  puts "#{board.current_player.name}'s King in Check!" if board.in_check
   puts "#{board.current_player.name}'s turn:"
 
   first_player_selection = nil
